@@ -436,6 +436,17 @@ function sortedMateri(lv){
   return [...((d&&d.materi)||[])].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
 }
 function materiOf(date){return sortedMateri().find(m=>m.date===date)||null}
+/* Default tanggal quiz: hari ini (Asia/Tokyo) bila materinya ada — termasuk data
+   contoh, yang tanggalnya memang dipetakan ke hari ini. Bila materi hari ini
+   belum terbit, pakai tanggal materi terbaru yang tersedia. */
+function defaultQuizDate(){
+  const t=dateWithOffset(0);
+  if(materiOf(t)) return t;
+  const l=sortedMateri();
+  return l.length?l[0].date:"";
+}
+/* Tanggal quiz yang dipakai: pilihan eksplisit user menang; selain itu hari ini. */
+function quizDateWanted(){return quizDate||selectedDate||defaultQuizDate()}
 function counts(lv,m){
   if(!m) return {g:0,v:0,gd:0,vd:0};
   const pr=progOf(lv,m.date);
@@ -791,14 +802,14 @@ async function submitQuiz(m,qs,answers,score,startedAt){
 function fillQuizDates(){
   const list=sortedMateri();
   $("quizDateSel").innerHTML=list.map(m=>'<option value="'+esc(m.date)+'">'+esc(fmtShort(m.date))+' — '+esc(m.theme||"")+'</option>').join("");
-  $("quizDateSel").value=quizDate||selectedDate;
+  $("quizDateSel").value=quizDateWanted();
 }
 $("quizDateSel").onchange=e=>{stopSpeak();quizDate=e.target.value;quizState=null;renderQuiz()};
 function renderQuiz(){
   const el=$("quizBody"); if(!el) return;
   if(isLocked(levelId)){el.innerHTML=lockedCardHtml(levelOf(levelId));fillQuizDates();return}
   fillQuizDates();
-  const m = materiOf(quizDate||selectedDate);
+  const m = materiOf(quizDateWanted());
   if(!m){el.innerHTML='<div class="card empty">'+(sortedMateri().length?'<b>📝</b>Quiz belum tersedia.':noDataMsg())+'</div>';return}
   const qs = m.quiz||[];
   if(!qs.length){el.innerHTML='<div class="card empty"><b>📝</b>Quiz belum tersedia untuk tanggal ini.<br>Coba tanggal lain, ya.</div>';return}
