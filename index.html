@@ -169,6 +169,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
     </div>
   </div>
   <p class="status"><i></i><span id="srcLabel">Memuat data…</span></p>
+  <div id="demoBar" hidden style="background:#FFF7E6;border:1.5px solid #E8A33D;color:#7A4d00;border-radius:14px;padding:10px 12px;margin-bottom:12px;font-size:13px;line-height:1.5">🧪 <b>Mode Contoh</b> — kamu sedang mencoba aplikasi dengan data contoh (3 hari per level, semua level terbuka). Quiz &amp; progres <b>tidak tercatat</b>. <button id="demoAct" style="float:right;background:#E8A33D;color:#fff;border:0;border-radius:9px;padding:5px 10px;font-weight:700;cursor:pointer">Aktifkan Kode Akses</button></div>
 
   <!-- AKTIVASI -->
   <section id="view-activate" hidden>
@@ -181,7 +182,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
       <input type="text" id="actKey" placeholder="cth: DJ-XXXXXX" autocomplete="off" style="text-transform:uppercase">
       <div class="acterr" id="actErr" hidden></div>
       <button class="btn pri" id="actBtn">Aktifkan</button>
-      <p class="mini" style="margin-top:12px">Belum punya kode akses? Hubungi admin Daily Japan untuk mendapatkannya. Satu kode berlaku untuk satu pengguna, dan jumlah perangkat dibatasi oleh admin.</p>
+      <button class="btn ghost" id="demoBtn" style="margin-top:10px">🧪 Coba Fitur Aplikasi dengan Data Contoh</button>
+      <p class="mini" style="margin-top:12px">Belum punya kode akses? Hubungi admin Daily Japan untuk mendapatkannya. Satu kode berlaku untuk satu pengguna, dan jumlah perangkat dibatasi oleh admin. Atau coba dulu mode contoh di atas — semua fitur bisa dilihat dengan data contoh 3 hari per level, tanpa kode (quiz dan progres tidak tercatat).</p>
     </div>
   </section>
 
@@ -252,7 +254,7 @@ function lockText(L){return "Terkunci — lulus 7 hari berturut-turut ≥9/10 di
 const LS = {
   key:"djp.key", nama:"djp.nama", device:"djp.device", level:"djp.level",
   status:"djp.status", marks:"djp.marks", queue:"djp.queue",
-  kanaCache:"djp.kana-cache", kanaProg:"djp.kana-progress"
+  kanaCache:"djp.kana-cache", kanaProg:"djp.kana-progress", demo:"djp.demo"
 };
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -361,8 +363,10 @@ function capType(t){t=String(t||"");return t?t.charAt(0).toUpperCase()+t.slice(1
 
 /* ---------- Status pengguna dari server ---------- */
 let USER = lsJson(LS.status,null); // {slot, nama, status, unlock:{N2,N1,...}, streak:{N5..N1}}
+let DEMO = false; // mode contoh (data seed, tanpa kode) — di-set saat boot / tombol demo
 function saveStatus(u){USER=u||null;try{if(u)localStorage.setItem(LS.status,JSON.stringify(u));else localStorage.removeItem(LS.status)}catch(e){}}
 function isLocked(lv){
+  if(DEMO) return false; // mode contoh: semua level terbuka untuk pratinjau fitur
   const L=levelOf(lv);
   if(!L.lockFrom) return false;
   if(!USER||!USER.unlock) return true; // belum ada status server -> terkunci
@@ -547,6 +551,7 @@ function go(v){
   view=v;
   ["home","materi","quiz","arsip","kana","activate"].forEach(x=>{const s=$("view-"+x);if(s)s.hidden=x!==v});
   const nav=$("mainNav"); if(nav) nav.hidden = (v==="activate");
+  const db=$("demoBar"); if(db) db.hidden = !(DEMO && v!=="activate");
   document.querySelectorAll(".bnav button").forEach(b=>b.classList.toggle("on",b.dataset.view===v));
   window.scrollTo({top:0});
   if(v==="kana") loadKana();
@@ -794,7 +799,9 @@ function renderQuiz(){
     const score=qs.reduce((s,q,i)=>s+(st.answers[i]===q.answer?1:0),0);
     const v=pr.verdict;
     let vh="";
-    if(st.sending){
+    if(DEMO){
+      vh='<div class="verdict off"><b>🧪 Mode Contoh — hasil tidak tercatat</b>Kamu sedang mencoba fitur quiz dengan data contoh. Hasil ini tidak dikirim ke server, tidak masuk catatan resmi, dan tidak memengaruhi streak. Aktifkan kode akses untuk mulai mencatat belajarmu.</div>';
+    } else if(st.sending){
       vh='<div class="verdict off"><b>⏳ Mengirim hasil ke server…</b></div>';
     } else if(v&&v.sent&&v.percobaan==="Resmi"){
       vh='<div class="verdict"><b>✅ Tercatat sebagai percobaan RESMI</b>'+
@@ -1076,6 +1083,7 @@ $("actBtn").onclick=async ()=>{
     const j=await apiGet({action:"status",key:kode,device:getDevice(),nama:nama});
     if(j&&j.ok&&j.user){
       lsSet(LS.key,kode); lsSet(LS.nama,nama);
+      DEMO=false; try{localStorage.removeItem(LS.demo)}catch(e){}
       saveStatus(j.user);
       renderUserName();
       toast("Halo, "+nama+"! Kode akses aktif ✓");
@@ -1141,15 +1149,29 @@ function enterApp(){
   loadLevel(levelId,false);
   flushQueue();
 }
+function enterDemo(){
+  DEMO=true; lsSet(LS.demo,"1");
+  go("home");
+  updateSrc();
+  renderAll();
+  loadLevel(levelId,false);
+  toast("🧪 Mode Contoh — semua fitur bisa dicoba dengan data contoh");
+}
+$("demoBtn").onclick=()=>enterDemo();
+$("demoAct").onclick=()=>{go("activate")};
 renderUserName();
 getDevice();
 if(!getKey()){
-  view="activate";
-  ["home","materi","quiz","arsip","kana"].forEach(x=>{$("view-"+x).hidden=true});
-  $("view-activate").hidden=false;
-  $("mainNav").hidden=true;
-  $("srcLabel").textContent="Aktifkan kode akses untuk mulai belajar";
-  const n=getNama(); if(n) $("actNama").value=n;
+  if(lsGet(LS.demo)==="1"){
+    enterDemo();
+  } else {
+    view="activate";
+    ["home","materi","quiz","arsip","kana"].forEach(x=>{$("view-"+x).hidden=true});
+    $("view-activate").hidden=false;
+    $("mainNav").hidden=true;
+    $("srcLabel").textContent="Aktifkan kode akses untuk mulai belajar";
+    const n=getNama(); if(n) $("actNama").value=n;
+  }
 } else {
   enterApp();
 }
