@@ -1,0 +1,1158 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Sengaja TANPA meta mode standalone iOS: shortcut Home Screen harus membuka tab Safari biasa, bukan wadah terpisah. -->
+<meta name="theme-color" content="#0E5F56">
+<title>Daily Japan</title>
+<style>
+:root{--teal:#0E5F56;--teal2:#0E7C86;--orange:#F28C28;--bg:#F2F7F5;--card:#fff;--ink:#17302C;--mute:#64756F;--line:#DCE8E3;--chip:#EAF3F0;--ok:#2E7D4F;--bad:#C93A4F;--warn:#FFF3E2;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP","Yu Gothic",system-ui,sans-serif;-webkit-text-size-adjust:100%;line-height:1.5}
+button,input,select{font:inherit;color:inherit}
+main{max-width:560px;margin:0 auto;padding:14px 16px 112px}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;background:#fff;border:2px solid #fff;box-shadow:0 2px 8px rgba(14,95,86,.25);flex:none}
+.top h1{font-size:19px;margin:0;font-weight:800;letter-spacing:-.2px}
+.top h1 span{color:var(--teal)}
+.hbtns{display:flex;gap:6px;flex:none}
+.hbtn{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:8px 11px;font-size:12.5px;font-weight:700;cursor:pointer;min-height:38px}
+.hbtn:active{transform:scale(.97)}
+.status{font-size:12px;color:var(--mute);margin:2px 2px 12px;display:flex;align-items:center;gap:6px}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--orange);flex:none}
+.hero{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;border-radius:24px;padding:20px;margin-bottom:14px;position:relative;overflow:hidden}
+.hero::after{content:"日本語";position:absolute;right:-4px;top:-14px;font-size:76px;font-weight:900;opacity:.10;pointer-events:none}
+.hero small{display:block;opacity:.85;font-size:13px}
+.hero h2{margin:4px 0 6px;font-size:21px;line-height:1.3}
+.hero p{margin:0;font-size:14px;opacity:.95}
+.card{background:var(--card);border-radius:20px;padding:16px;margin-bottom:14px;border:1px solid var(--line)}
+.card h2,.card h3{margin:0 0 10px;font-size:16px}
+.btn{display:block;width:100%;border:0;border-radius:16px;padding:15px;font-weight:800;font-size:16px;cursor:pointer;text-align:center;text-decoration:none;min-height:52px}
+.btn.pri{background:var(--orange);color:#fff}
+.btn.teal{background:var(--teal);color:#fff}
+.btn.ghost{background:var(--chip);color:var(--teal)}
+.btn+.btn{margin-top:9px}
+.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.6}
+.prog{margin:12px 0 4px}
+.prow{display:flex;justify-content:space-between;font-size:13px;color:var(--mute);margin-bottom:5px}
+.pbar{height:10px;background:var(--chip);border-radius:99px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--orange);border-radius:99px;transition:width .3s}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{background:var(--chip);border-radius:99px;padding:7px 11px;font-size:13px}
+.chip b{color:var(--teal)}
+.chip.done{background:#E3F2E7;color:var(--ok)}
+.mini{font-size:13px;color:var(--mute);line-height:1.6}
+select,input[type=search],input[type=text]{width:100%;border:0;background:var(--chip);border-radius:14px;padding:13px 14px;font-size:16px;outline:none;min-height:48px;margin-bottom:12px}
+.gcard{border:1.5px solid var(--teal);border-radius:16px;margin-bottom:11px;overflow:hidden;background:#F8FBFA}
+.ghead{width:100%;display:flex;gap:10px;align-items:flex-start;background:none;border:0;padding:14px;text-align:left;cursor:pointer;min-height:52px}
+.ghead .pat{flex:1;font-size:18px;font-weight:800;color:var(--teal)}
+.ghead .lvl{background:var(--teal);color:#fff;font-size:11px;font-weight:800;border-radius:99px;padding:3px 8px;flex:none;margin-top:3px}
+.ghead .lvl.n2{background:var(--orange)}
+.ghead .arr{color:var(--mute);flex:none;margin-top:4px}
+.gbody{padding:0 14px 14px;font-size:14.5px;display:none}
+.gcard.open .gbody{display:block}
+.gbody p{margin:7px 0}
+.gbody .lbl{font-weight:800;color:var(--teal);font-size:12.5px;text-transform:uppercase;letter-spacing:.4px}
+.ex{background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 11px;margin:7px 0}
+.ex .jp{font-size:15.5px}
+.ex .id{color:var(--mute);font-size:13.5px}
+.check{border:1.5px solid var(--teal);background:#fff;color:var(--teal);border-radius:99px;padding:9px 14px;font-weight:800;font-size:13.5px;cursor:pointer;min-height:44px}
+.check.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.vrow{display:flex;gap:11px;align-items:flex-start;padding:12px 2px;border-top:1px solid var(--line)}
+.vrow:first-of-type{border-top:0}
+.vrow .w{flex:1;min-width:0}
+.vrow .w b{font-size:17px}
+.vrow .w .rd{color:var(--teal2);font-size:13px;font-weight:700}
+.vrow .w .mn{font-size:14px}
+.vrow .w .ex2{font-size:13px;color:var(--mute)}
+.flash{border:1.5px solid var(--teal2);border-radius:16px;padding:20px 16px;text-align:center;cursor:pointer;background:#F8FBFA;margin-bottom:11px;min-height:110px;display:flex;flex-direction:column;justify-content:center;gap:5px;width:100%}
+.flash .fw{font-size:24px;font-weight:800}
+.flash .fr{color:var(--teal2);font-weight:700}
+.flash .fm{font-size:16px;display:none}
+.flash.flip .fm{display:block}
+.flash .hint{font-size:12px;color:var(--mute)}
+.seg{display:flex;flex-wrap:wrap;gap:4px;background:var(--chip);border-radius:14px;padding:4px;margin-bottom:12px}
+.seg button{flex:1;border:0;background:none;border-radius:11px;padding:11px 6px;font-weight:800;cursor:pointer;color:var(--mute);min-height:46px;white-space:nowrap}
+.seg button.on{background:var(--teal);color:#fff}
+.bubble{max-width:88%;border-radius:18px;padding:11px 14px;margin-bottom:10px;font-size:15px}
+.bubble .sp{font-size:12px;font-weight:800;color:var(--teal);margin-bottom:3px}
+.bubble .bid{font-size:13px;color:var(--mute);margin-top:4px}
+.bubble.a{background:var(--chip);margin-right:auto;border-bottom-left-radius:6px}
+.bubble.b{background:#FFF0DD;margin-left:auto;border-bottom-right-radius:6px}
+.tips{background:#EAF5EC;border:1.5px solid var(--ok);border-radius:16px;padding:14px 16px;font-size:14.5px;margin-bottom:14px}
+.qopt{display:block;width:100%;text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:14px;font-size:15.5px;cursor:pointer;margin-bottom:9px;min-height:52px}
+.qopt.sel-ok{border-color:var(--ok);background:#EAF7EE;font-weight:700}
+.qopt.sel-bad{border-color:var(--bad);background:#FDECEF}
+.qopt.dim{opacity:.65}
+.qexp{background:var(--warn);border:1.5px solid var(--orange);border-radius:14px;padding:12px 14px;font-size:14.5px;margin:10px 0}
+.score{text-align:center;padding:10px 0}
+.score b{display:block;font-size:44px;color:var(--teal)}
+.arow{display:flex;gap:11px;align-items:center;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px;cursor:pointer;min-height:60px}
+.arow .t{flex:1;min-width:0}
+.arow .t b{display:block;font-size:15px}
+.arow .t span{font-size:12.5px;color:var(--mute)}
+.arow .st{font-size:12px;font-weight:800;color:var(--orange);flex:none;text-align:right}
+.arow .st.done{color:var(--ok)}
+.empty{text-align:center;color:var(--mute);padding:30px 18px;line-height:1.7;font-size:14.5px}
+.empty b{display:block;font-size:30px;margin-bottom:6px}
+.bnav{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:6px 8px calc(env(safe-area-inset-bottom,0px) + 8px);z-index:10}
+.bnav-in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.bnav button{border:0;background:none;border-radius:14px;padding:8px 2px;font-size:12px;font-weight:700;color:var(--mute);cursor:pointer;min-height:52px}
+.bnav button .ic{display:block;font-size:21px;line-height:1.2}
+.bnav button.on{color:var(--teal);background:var(--chip)}
+.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);transform:translate(-50%,-90px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;font-weight:700;transition:transform .25s;z-index:30;max-width:92vw;text-align:center}
+.toast.on{transform:translate(-50%,0)}
+.lvgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.lvcard{border:2px solid var(--line);background:var(--card);border-radius:18px;padding:14px 13px;text-align:left;cursor:pointer;min-height:86px}
+.lvcard b{display:block;font-size:17px;color:var(--teal);margin-bottom:3px}
+.lvcard span{font-size:12.5px;color:var(--mute);line-height:1.45;display:block}
+.lvcard.on{border-color:var(--teal);background:#EAF5F1;box-shadow:0 3px 10px rgba(14,95,86,.18)}
+.lvcard.on b::after{content:" ✓";color:var(--ok)}
+.lvcard:active{transform:scale(.98)}
+.lvcard.locked{opacity:.8;background:#F4F6F5;border-style:dashed}
+.lvcard .streak{display:inline-block;background:#FFF3E2;color:#9A5B00;border-radius:99px;padding:2px 9px;font-size:12px;font-weight:800;margin-top:6px}
+.badge{display:inline-block;background:var(--orange);color:#fff;border-radius:99px;padding:1px 8px;font-size:11px;font-weight:800;vertical-align:2px;margin-left:6px}
+.brandtxt{display:flex;flex-direction:column;min-width:0}
+.uname{background:none;border:0;padding:0;margin-top:1px;text-align:left;font-size:11.5px;color:var(--mute);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw;font-weight:600}
+.kanabtn{display:flex;gap:12px;align-items:center;width:100%;border:0;border-radius:20px;padding:16px;color:#fff;background:linear-gradient(135deg,#B04A82,#7E6BB5);cursor:pointer;text-align:left;margin-bottom:12px;box-shadow:0 4px 14px rgba(126,107,181,.35)}
+.kanabtn:active{transform:scale(.98)}
+.kanabtn .kb-k{font-size:29px;font-weight:900;flex:none;line-height:1.15}
+.kanabtn .kb-t{flex:1;min-width:0}
+.kanabtn .kb-t b{display:block;font-size:17px}
+.kanabtn .kb-t span{font-size:12.5px;opacity:.93;line-height:1.4;display:block}
+.kanabtn .kb-a{font-size:26px;opacity:.85;flex:none}
+.kgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.kgrp{grid-column:1/-1;font-size:12px;font-weight:800;color:var(--mute);margin-top:8px;letter-spacing:.3px}
+.ktile{border:1.5px solid var(--line);border-radius:14px;background:#F8FBFA;padding:9px 1px 7px;text-align:center;position:relative}
+.ktile.on{border-color:var(--ok);background:#EAF7EE}
+.ktile .kk{font-size:25px;font-weight:800;display:block;background:none;border:0;width:100%;cursor:pointer;padding:6px 0 1px;color:var(--ink);line-height:1.2}
+.ktile .kk.long{font-size:17px;padding-top:10px}
+.ktile .kr{font-size:12px;color:var(--teal2);font-weight:700}
+.ktile .kmk{position:absolute;top:3px;right:3px;width:21px;height:21px;border-radius:50%;border:1.5px solid var(--teal);background:#fff;color:var(--teal);font-size:10.5px;font-weight:800;cursor:pointer;padding:0;line-height:1}
+.ktile.on .kmk{background:var(--ok);border-color:var(--ok);color:#fff}
+.knote{background:var(--warn);border:1.5px solid var(--orange);border-radius:12px;padding:9px 12px;font-size:13.5px;margin-top:10px;min-height:42px}
+.kinfo{border:1.5px solid var(--line);border-radius:14px;padding:12px 13px;margin-bottom:10px;background:#F8FBFA}
+.kinfo b{display:block;margin-bottom:4px;color:var(--teal)}
+.kinfo .kjp{font-size:16.5px;margin:3px 0;line-height:1.8}
+.kinfo .kid{font-size:13.5px;color:var(--mute);line-height:1.55}
+.abtn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--chip);font-size:15px;cursor:pointer;flex:none;vertical-align:middle;padding:0}
+.abtn:active{transform:scale(.92)}
+.abtn.wide{width:auto;border-radius:99px;padding:0 14px;height:38px;font-weight:700;font-size:13.5px;color:var(--teal)}
+.audiorow{display:flex;gap:8px;margin:-4px 0 12px}
+.ex .abtn{float:right;margin:0 0 4px 8px}
+.bubble .abtn{float:right;margin:0 0 4px 8px}
+.vrow .w .abtn{margin-left:2px}
+.acterr{background:#FDECEF;border:1.5px solid var(--bad);color:var(--bad);border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:12px;line-height:1.5}
+.verdict{border-radius:14px;padding:12px 14px;font-size:14.5px;margin:0 0 12px;border:1.5px solid var(--ok);background:#EAF7EE;line-height:1.55}
+.verdict.lat{border-color:var(--orange);background:var(--warn)}
+.verdict.off{border-color:var(--line);background:var(--chip)}
+.verdict b{display:block;font-size:15.5px}
+.dayrow{display:flex;gap:9px;align-items:stretch;margin-bottom:10px}
+.dayrow .arow{flex:1;margin-bottom:0}
+.pdfbtn{display:flex;align-items:center;justify-content:center;border:1px solid var(--line);background:var(--chip);color:var(--teal);border-radius:16px;padding:0 13px;font-weight:800;font-size:13px;text-decoration:none;flex:none}
+.locknote{background:var(--warn);border:1.5px solid var(--orange);border-radius:14px;padding:12px 14px;font-size:14px;margin-bottom:14px;line-height:1.55}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <div class="brand"><img class="avatar" src="hasian.gif" alt="Hasian" width="40" height="40" onerror="this.style.display='none'"><div class="brandtxt"><h1>Daily Japan</h1><button class="uname" id="userName" aria-label="Nama pengguna di perangkat ini">Welcome</button></div></div>
+    <div class="hbtns">
+      <button class="hbtn" id="btnKey">Kode akses</button>
+      <button class="hbtn" id="btnSync">↻ Sinkronkan</button>
+    </div>
+  </div>
+  <p class="status"><i></i><span id="srcLabel">Memuat data…</span></p>
+
+  <!-- AKTIVASI -->
+  <section id="view-activate" hidden>
+    <div class="card">
+      <h2>👋 Selamat datang di Daily Japan</h2>
+      <p class="mini" style="margin-bottom:14px">Belajar Bahasa Jepang setiap hari: grammar, kosakata, dialog, bacaan, dan quiz — dari N5 sampai N1. Untuk mulai, masukkan <b>kode akses</b> yang kamu terima dari admin beserta namamu. Kode dan nama hanya tersimpan di perangkat ini.</p>
+      <label class="mini" for="actNama">Nama kamu</label>
+      <input type="text" id="actNama" placeholder="cth: Sari" autocomplete="name">
+      <label class="mini" for="actKey">Kode akses</label>
+      <input type="text" id="actKey" placeholder="cth: DJ-XXXXXX" autocomplete="off" style="text-transform:uppercase">
+      <div class="acterr" id="actErr" hidden></div>
+      <button class="btn pri" id="actBtn">Aktifkan</button>
+      <p class="mini" style="margin-top:12px">Belum punya kode akses? Hubungi admin Daily Japan untuk mendapatkannya. Satu kode berlaku untuk satu pengguna, dan jumlah perangkat dibatasi oleh admin.</p>
+    </div>
+  </section>
+
+  <!-- BERANDA -->
+  <section id="view-home" hidden></section>
+
+  <!-- MATERI -->
+  <section id="view-materi" hidden>
+    <div id="materiBody"></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="view-quiz" hidden>
+    <label class="mini" for="quizDateSel">Quiz untuk tanggal</label>
+    <select id="quizDateSel" aria-label="Pilih tanggal quiz"></select>
+    <div id="quizBody"></div>
+  </section>
+
+  <!-- ARSIP -->
+  <section id="view-arsip" hidden>
+    <input type="search" id="searchBox" placeholder="Cari tema, grammar, atau vocab…" aria-label="Cari di arsip">
+    <div id="arsipBody"></div>
+  </section>
+
+  <!-- HIRAGANA & KATAKANA (materi tetap pendahuluan) -->
+  <section id="view-kana" hidden>
+    <button class="btn ghost" id="kanaBack" style="margin-bottom:12px">‹ Kembali ke Beranda</button>
+    <div id="kanaBody"></div>
+  </section>
+</main>
+
+<nav class="bnav" id="mainNav" aria-label="Navigasi utama" hidden><div class="bnav-in">
+  <button data-view="home" class="on"><span class="ic">🏠</span>Beranda</button>
+  <button data-view="materi"><span class="ic">📖</span>Materi</button>
+  <button data-view="quiz"><span class="ic">📝</span>Quiz</button>
+  <button data-view="arsip"><span class="ic">🗂️</span>Arsip</button>
+</div></nav>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ============================================================
+   Daily Japan — versi publik (multi-pengguna)
+   ------------------------------------------------------------
+   Satu endpoint Apps Script pusat melayani semua pengguna dan
+   semua level. Setiap pengguna punya KODE AKSES unik dari admin;
+   kode + ID perangkat (device) + nama dikirim di setiap request.
+   Server yang menentukan: status akun, streak per level, dan
+   apakah level N2/N1 sudah terbuka (lulus 7 hari berturut-turut
+   dengan nilai >= 9/10 di level sebelumnya). Percobaan quiz
+   PERTAMA setiap hari dicap "Resmi" oleh server; sisanya
+   "Latihan". Bila server tidak terjangkau, app memakai cache
+   perangkat, lalu data contoh bawaan (seed.json).
+   ============================================================ */
+const API = "https://script.google.com/macros/s/AKfycbxNjX28OgkwmyudtpDKPjJabSnAr-sF8Pd93ltJoId4LbdQvyFnjEpgVxW9vJQml6EI/exec";
+
+const LEVELS = [
+  {id:"N5", desc:"Pemula — dasar-dasar & percakapan sehari-hari"},
+  {id:"N4", desc:"Dasar lanjutan — hidup sehari-hari di Jepang"},
+  {id:"N3", desc:"Menengah — kerja, sosial & persiapan naik level"},
+  {id:"N2", desc:"Menengah atas — bisnis & bacaan", lockFrom:"N3"},
+  {id:"N1", desc:"Mahir — nuansa, media & dokumen formal", lockFrom:"N2"}
+];
+function levelOf(id){return LEVELS.find(L=>L.id===id)||LEVELS[0]}
+function lockText(L){return "Terkunci — lulus 7 hari berturut-turut ≥9/10 di "+L.lockFrom+" untuk membuka"}
+
+/* ---------- Penyimpanan perangkat ---------- */
+const LS = {
+  key:"djp.key", nama:"djp.nama", device:"djp.device", level:"djp.level",
+  status:"djp.status", marks:"djp.marks", queue:"djp.queue",
+  kanaCache:"djp.kana-cache", kanaProg:"djp.kana-progress"
+};
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function lsJson(k,f){try{const v=JSON.parse(localStorage.getItem(k)||"null");return v===null?f:v}catch(e){return f}}
+function toast(m){const t=$("toast");t.textContent=m;t.className="toast on";clearTimeout(toast.h);toast.h=setTimeout(()=>t.className="toast",2600)}
+
+function getKey(){return (lsGet(LS.key)||"").trim()}
+function getNama(){return (lsGet(LS.nama)||"").trim()}
+function getDevice(){
+  let d=lsGet(LS.device);
+  if(!d){
+    d=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():("dev-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,12));
+    lsSet(LS.device,d);
+  }
+  return d;
+}
+function renderUserName(){
+  const el=$("userName"); if(!el) return;
+  const nm=getNama();
+  el.textContent = nm ? ("Welcome, "+nm) : "Welcome — ketuk untuk isi nama";
+}
+
+/* ---------- Audio: text-to-speech Bahasa Jepang (Web Speech API) ---------- */
+/* Suara ja-JP dipilih eksplisit (daftar suara termuat asinkron lewat
+   voiceschanged); cancel() hanya bila sedang ada ucapan agar ucapan
+   baru tidak dibuang diam-diam oleh WebKit iOS. */
+let jaVoice=null;
+function loadVoices(){
+  try{
+    const vs=(window.speechSynthesis.getVoices()||[]).filter(v=>/^ja([-_]|$)/i.test(v.lang||""));
+    if(!vs.length){jaVoice=null;return}
+    const score=v=>{
+      const n=((v.name||"")+" "+(v.voiceURI||"")).toLowerCase();
+      let s=0;
+      if(/enhanced|premium|neural|natural/.test(n)) s+=40;
+      if(/google/.test(n)) s+=30;
+      if(/kyoko/.test(n)) s+=20;
+      if(/otoya/.test(n)) s+=10;
+      if(v.default) s+=5;
+      if(/compact|eloquence|novelty/.test(n)) s-=30;
+      return s;
+    };
+    jaVoice=vs.slice().sort((a,b)=>score(b)-score(a))[0];
+  }catch(e){}
+}
+if("speechSynthesis" in window){
+  loadVoices();
+  try{window.speechSynthesis.addEventListener("voiceschanged",loadVoices)}catch(e){}
+}
+function speak(text){
+  const t=String(text??"").trim();
+  if(!t) return;
+  if(!("speechSynthesis" in window)){toast("Audio tidak tersedia di browser ini");return}
+  const synth=window.speechSynthesis;
+  const doSpeak=()=>{
+    try{
+      const u=new SpeechSynthesisUtterance(t);
+      u.lang="ja-JP";
+      u.rate=(t.length>10||/。|、/.test(t))?1.0:0.88;
+      u.pitch=1;
+      u.volume=1;
+      if(jaVoice) u.voice=jaVoice;
+      u.onerror=ev=>{if(ev&&(ev.error==="language-unavailable"||ev.error==="voice-unavailable"))toast("Suara Bahasa Jepang belum terpasang di perangkat ini")};
+      synth.speak(u);
+      if(synth.paused) synth.resume();
+    }catch(e){toast("Audio tidak tersedia di browser ini")}
+  };
+  try{
+    if(synth.speaking||synth.pending){synth.cancel();setTimeout(doSpeak,90)}
+    else doSpeak();
+  }catch(e){doSpeak()}
+}
+function stopSpeak(){if("speechSynthesis" in window){try{window.speechSynthesis.cancel()}catch(e){}}}
+/* Tombol 🔊 memakai atribut data-speak (delegasi tangkap). */
+document.addEventListener("click",e=>{
+  const b=e.target.closest?e.target.closest("[data-speak]"):null;
+  if(!b) return;
+  e.stopPropagation();
+  speak(b.dataset.speak);
+},true);
+/* Kartu/pemilih level memakai atribut data-lv (delegasi klik). */
+document.addEventListener("click",e=>{
+  const b=e.target.closest?e.target.closest("[data-lv]"):null;
+  if(!b) return;
+  setLevel(b.dataset.lv);
+});
+
+function fmtDate(iso){
+  if(!iso) return "";
+  const p=String(iso).slice(0,10).split("-");
+  if(p.length!==3) return String(iso);
+  return new Date(+p[0],+p[1]-1,+p[2]).toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+}
+function fmtShort(iso){
+  const p=String(iso||"").slice(0,10).split("-");
+  if(p.length!==3) return String(iso||"");
+  return new Date(+p[0],+p[1]-1,+p[2]).toLocaleDateString("id-ID",{day:"numeric",month:"short",year:"numeric"});
+}
+/* Tanggal "hari ini" menurut Asia/Tokyo (untuk memetakan seed offset). */
+function tokyoNow(){try{return new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Tokyo"}))}catch(e){return new Date()}}
+function isoOf(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function dateWithOffset(off){const t=tokyoNow();t.setDate(t.getDate()+(off||0));return isoOf(t)}
+function capType(t){t=String(t||"");return t?t.charAt(0).toUpperCase()+t.slice(1):""}
+
+/* ---------- Status pengguna dari server ---------- */
+let USER = lsJson(LS.status,null); // {slot, nama, status, unlock:{N2,N1,...}, streak:{N5..N1}}
+function saveStatus(u){USER=u||null;try{if(u)localStorage.setItem(LS.status,JSON.stringify(u));else localStorage.removeItem(LS.status)}catch(e){}}
+function isLocked(lv){
+  const L=levelOf(lv);
+  if(!L.lockFrom) return false;
+  if(!USER||!USER.unlock) return true; // belum ada status server -> terkunci
+  return !USER.unlock[lv];
+}
+function streakOf(lv){
+  if(!USER||!USER.streak) return null;
+  const v=USER.streak[lv];
+  return (v===undefined||v===null)?null:v;
+}
+
+/* ---------- Klien API ---------- */
+async function fetchJson(url){const r=await fetch(url,{cache:"no-store"});if(!r.ok)throw new Error("http "+r.status);return r.json()}
+async function apiGet(params){
+  const qs=Object.keys(params).map(k=>k+"="+encodeURIComponent(params[k])).join("&");
+  return fetchJson(API+"?"+qs);
+}
+async function apiPost(body){
+  const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)});
+  if(!r.ok) throw new Error("http "+r.status);
+  return r.json();
+}
+async function refreshStatus(){
+  if(!getKey()) return false;
+  try{
+    const j=await apiGet({action:"status",key:getKey(),device:getDevice(),nama:getNama()});
+    if(j&&j.ok&&j.user){saveStatus(j.user);renderAll();return true}
+    return false;
+  }catch(e){return false}
+}
+
+/* ---------- State ---------- */
+const LVDATA = {}; // lv -> {materi:[DAY], kind:'server'|'cache'|'seed'|'locked'|'none'}
+let levelId = (function(){const v=lsGet(LS.level);return LEVELS.some(L=>L.id===v)?v:"N5"})();
+let selectedDate = "";   // tanggal yang sedang dibuka di detail materi
+let materiOpen = null;   // date string bila detail hari terbuka, null = daftar hari
+let quizDate = "";
+let quizState = null;    // {date, started, idx, answers, finished, startedAt}
+let vocabMode = "list";  // list | flash
+const flipped = new Set();
+let lockNote = "";       // penjelasan kunci yang ditampilkan di Beranda
+
+function curData(){return LVDATA[levelId]||{materi:[],kind:"none"}}
+function sortedMateri(lv){
+  const d=LVDATA[lv||levelId];
+  return [...((d&&d.materi)||[])].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+}
+function materiOf(date){return sortedMateri().find(m=>m.date===date)||null}
+function counts(lv,m){
+  if(!m) return {g:0,v:0,gd:0,vd:0};
+  const pr=progOf(lv,m.date);
+  return {g:(m.grammar||[]).length, v:(m.vocab||[]).length,
+    gd:Object.keys(pr.grammar||{}).filter(k=>pr.grammar[k]).length,
+    vd:Object.keys(pr.vocab||{}).filter(k=>pr.vocab[k]).length};
+}
+
+/* ---------- Tanda paham/hafal & skor (lokal, per level+tanggal) ---------- */
+function loadMarks(){return lsJson(LS.marks,{})}
+function progOf(lv,date){
+  const all=loadMarks();
+  return all[lv+"|"+date]||{grammar:{},vocab:{},quizBest:null,quizLast:null,verdict:null};
+}
+function setProg(lv,date,fn){
+  const all=loadMarks(), k=lv+"|"+date;
+  const cur=all[k]||{grammar:{},vocab:{},quizBest:null,quizLast:null,verdict:null};
+  fn(cur); all[k]=cur; lsSet(LS.marks,JSON.stringify(all));
+}
+
+/* ---------- Antrean kirim (quiz & progres) untuk mode offline ---------- */
+function loadQ(){return lsJson(LS.queue,[])}
+function saveQ(q){lsSet(LS.queue,JSON.stringify(q.slice(-60)))}
+function enqueuePost(body){
+  const q=loadQ(); q.push(body); saveQ(q); flushQueue();
+}
+let flushing=false;
+async function flushQueue(){
+  if(flushing||!getKey()) return;
+  flushing=true;
+  try{
+    let q=loadQ();
+    while(q.length){
+      const r=await apiPost(q[0]);
+      if(r&&r.ok){q.shift();saveQ(q)}
+      else break;
+    }
+  }catch(e){/* tetap mengantre di perangkat */}
+  flushing=false;
+}
+/* Setiap perubahan tanda paham/hafal -> kirim snapshot progres (debounce). */
+let progTimer=null;
+function queueProgres(m){
+  if(!m||!getKey()) return;
+  clearTimeout(progTimer);
+  progTimer=setTimeout(()=>{
+    const c=counts(levelId,m);
+    const status=(c.g>0&&c.gd>=c.g&&c.v>0&&c.vd>=c.v)?"Selesai":"Berlangsung";
+    enqueuePost({key:getKey(),device:getDevice(),nama:getNama(),kind:"progres",
+      level:levelId,date:m.date,gDone:c.gd,gTotal:c.g,vDone:c.vd,vTotal:c.v,status:status});
+  },1500);
+}
+
+/* ---------- Muat data level: cache -> server -> seed ---------- */
+function cacheKey(lv){return "djp.cache."+lv}
+function readCache(lv){const c=lsJson(cacheKey(lv),null);return (c&&Array.isArray(c.materi))?c.materi:null}
+function writeCache(lv,materi){lsSet(cacheKey(lv),JSON.stringify({materi:materi,at:Date.now()}))}
+let SEED=null;
+async function loadSeedFile(){
+  if(SEED) return SEED;
+  try{SEED=await fetchJson("seed.json")}catch(e){SEED={}}
+  return SEED;
+}
+function seedDaysFor(lv){
+  const arr=(SEED&&SEED[lv])||[];
+  return arr.map(d=>{
+    const c=JSON.parse(JSON.stringify(d));
+    c.date=dateWithOffset(c.offset||0);
+    delete c.offset;
+    c.contoh=true;
+    return c;
+  });
+}
+async function loadLevel(lv,manual){
+  // (1) cache perangkat untuk tampilan seketika
+  if(!LVDATA[lv]){
+    const c=readCache(lv);
+    if(c&&c.length) LVDATA[lv]={materi:c,kind:"cache"};
+  }
+  if(lv===levelId){updateSrc();renderAll()}
+
+  // Level terkunci menurut status terakhir: jangan ambil apa pun.
+  if(isLocked(lv)){
+    LVDATA[lv]={materi:[],kind:"locked"};
+    if(lv===levelId){updateSrc();renderAll()}
+    return;
+  }
+  // (2) server pusat
+  if(getKey()){
+    try{
+      const j=await apiGet({action:"materi",level:lv,key:getKey(),device:getDevice(),nama:getNama()});
+      if(j&&j.user) saveStatus(j.user);
+      if(j&&j.ok&&Array.isArray(j.materi)){
+        LVDATA[lv]={materi:j.materi,kind:"server"};
+        writeCache(lv,j.materi);
+        if(lv===levelId){updateSrc();renderAll()}
+        if(manual) toast("Sinkron selesai — data "+lv+" terbaru dari server");
+        return;
+      }
+      if(j&&j.error==="locked"){
+        LVDATA[lv]={materi:[],kind:"locked"};
+        if(lv===levelId){updateSrc();renderAll()}
+        if(manual) toast(lockText(levelOf(lv)));
+        return;
+      }
+      if(j&&j.error==="unauthorized"&&manual) toast("Kode akses tidak dikenal — periksa lewat tombol Kode akses");
+      if(j&&j.error==="device_limit"&&manual) toast("Kode ini sudah mencapai batas device. Hubungi admin untuk reset device.");
+    }catch(e){/* offline: lanjut ke cadangan */}
+  }
+  // (3) seed bawaan — hanya bila belum ada data sama sekali untuk level ini,
+  //     dan hanya selama server belum pernah memberi data asli level ini.
+  if(!LVDATA[lv]||!LVDATA[lv].materi.length){
+    await loadSeedFile();
+    const sd=seedDaysFor(lv);
+    if(sd.length) LVDATA[lv]={materi:sd,kind:"seed"};
+  }
+  if(lv===levelId){updateSrc();renderAll()}
+  if(manual&&curData().kind!=="server"&&lv===levelId) toast("Server belum terjangkau — menampilkan data tersimpan/contoh");
+}
+function srcText(){
+  const L=levelOf(levelId), d=curData(), latest=sortedMateri()[0];
+  if(d.kind==="locked"||isLocked(levelId)) return "🔒 Level "+levelId+" terkunci — "+lockText(L).replace(/^Terkunci — /,"");
+  if(d.kind==="server") return "Terhubung ke server • Level "+levelId+(latest?" • materi terbaru "+fmtShort(latest.date):"");
+  if(d.kind==="cache") return "Data tersimpan di HP • Level "+levelId+" — ketuk Sinkronkan untuk yang terbaru";
+  if(d.kind==="seed") return "Data contoh bawaan • Level "+levelId+" — aktifkan kode akses untuk materi asli";
+  return "Memuat data…";
+}
+function updateSrc(){const el=$("srcLabel");if(el)el.textContent=srcText()}
+
+/* ---------- Navigasi ---------- */
+let view = "home";
+function go(v){
+  stopSpeak();
+  view=v;
+  ["home","materi","quiz","arsip","kana","activate"].forEach(x=>{const s=$("view-"+x);if(s)s.hidden=x!==v});
+  const nav=$("mainNav"); if(nav) nav.hidden = (v==="activate");
+  document.querySelectorAll(".bnav button").forEach(b=>b.classList.toggle("on",b.dataset.view===v));
+  window.scrollTo({top:0});
+  if(v==="kana") loadKana();
+  renderAll();
+}
+document.querySelectorAll(".bnav button").forEach(b=>b.onclick=()=>go(b.dataset.view));
+
+function setLevel(id){
+  if(!LEVELS.some(L=>L.id===id)) return;
+  const L=levelOf(id);
+  if(isLocked(id)){
+    lockNote="🔒 <b>Level "+id+" masih terkunci.</b> "+lockText(L)+". Streak dan kelulusan dihitung oleh server dari percobaan quiz pertamamu setiap hari.";
+    toast(lockText(L));
+    if(view!=="home") go("home"); else renderAll();
+    return;
+  }
+  lockNote="";
+  stopSpeak();
+  if(id!==levelId){
+    levelId=id; lsSet(LS.level,id);
+    selectedDate=""; quizDate=""; quizState=null; materiOpen=null; flipped.clear();
+  }
+  updateSrc();
+  renderAll();
+  loadLevel(id,false);
+}
+function levelSegHtml(){
+  return '<div class="seg" role="group" aria-label="Ganti level">'+
+    LEVELS.map(L=>'<button data-lv="'+L.id+'" class="'+(L.id===levelId?"on":"")+'">'+(isLocked(L.id)?"🔒 ":"")+L.id+'</button>').join("")+
+    '</div>';
+}
+function lockedCardHtml(L){
+  return '<div class="card empty"><b>🔒</b>Level '+L.id+' masih terkunci.<br>'+esc(lockText(L))+'.</div>';
+}
+function noDataMsg(){
+  return '<b>🌸</b>Belum ada materi untuk level ini.<br>Ketuk “Sinkronkan” setelah terhubung ke server, atau coba lagi nanti.';
+}
+
+/* ---------- Render: Beranda ---------- */
+function kanaBtnHtml(){
+  return '<button class="kanabtn" id="hKana"><span class="kb-k">あ<br>ア</span><span class="kb-t"><b>Hiragana &amp; Katakana</b><span>Materi pendahuluan dari nol: huruf, angka, sapaan &amp; quiz kana 🌱</span></span><span class="kb-a">›</span></button>';
+}
+function wireKanaBtn(){const b=$("hKana");if(b)b.onclick=()=>go("kana")}
+function levelCardsHtml(){
+  return '<div class="lvgrid" role="group" aria-label="Pilih level belajar">'+
+    LEVELS.map(L=>{
+      const locked=isLocked(L.id), st=streakOf(L.id);
+      return '<button class="lvcard'+(L.id===levelId?" on":"")+(locked?" locked":"")+'" data-lv="'+L.id+'"><b>'+(locked?"🔒 ":"")+"Level "+L.id+'</b><span>'+esc(L.desc)+'</span>'+
+        (locked?'<span style="color:var(--bad);font-weight:700">'+esc(lockText(L))+'</span>':
+          (st!==null?'<span class="streak">🔥 Streak: '+st+' hari</span>':''))+
+        '</button>';
+    }).join("")+'</div>';
+}
+function renderHome(){
+  const el=$("view-home"); if(!el) return;
+  const m = materiOf(selectedDate) || sortedMateri()[0];
+  let h = kanaBtnHtml() + levelCardsHtml();
+  if(lockNote) h += '<div class="locknote">'+lockNote+'</div>';
+  if(isLocked(levelId)){
+    h += lockedCardHtml(levelOf(levelId));
+    el.innerHTML=h; wireKanaBtn(); return;
+  }
+  if(!m){
+    h += '<div class="card empty">'+noDataMsg()+'</div>';
+    el.innerHTML=h; wireKanaBtn(); return;
+  }
+  const c = counts(levelId,m), pr = progOf(levelId,m.date);
+  const pct = (c.g+c.v)?Math.round((c.gd+c.vd)/(c.g+c.v)*100):0;
+  h += '<section class="hero"><small>'+esc(fmtDate(m.date))+(m.context?' • '+esc(m.context):'')+' • Level '+levelId+'</small>'+
+    '<h2>'+esc(m.theme||"Materi terbaru")+(m.contoh?'<span class="badge">Contoh</span>':'')+'</h2>'+
+    (m.target?'<p>🎯 '+esc(m.target)+'</p>':'')+'</section>'+
+    '<div class="card"><h3>Progres materi terbaru</h3>'+
+    '<div class="prog"><div class="prow"><span>Grammar dipahami</span><b>'+c.gd+' / '+c.g+'</b></div><div class="pbar"><i style="width:'+(c.g?c.gd/c.g*100:0)+'%"></i></div></div>'+
+    '<div class="prog"><div class="prow"><span>Vocab dihafal</span><b>'+c.vd+' / '+c.v+'</b></div><div class="pbar"><i style="width:'+(c.v?c.vd/c.v*100:0)+'%"></i></div></div>'+
+    '<p class="mini">Selesai '+pct+'% • Skor quiz terbaik: '+(pr.quizBest===null||pr.quizBest===undefined?"belum ada":pr.quizBest+" / "+(m.quiz||[]).length)+'</p>'+
+    '<button class="btn pri" id="hStart">▶ Buka Materi Ini</button>'+
+    '<button class="btn teal" id="hQuiz">📝 Kerjakan Quiz-nya</button></div>'+
+    '<div class="card"><h3>Grammar sekilas ('+(m.grammar||[]).length+')</h3><div class="chips">'+
+    (m.grammar||[]).map(g=>'<span class="chip'+(pr.grammar&&pr.grammar[g.no]?" done":"")+'"><b>'+esc(g.pattern)+'</b> — '+esc(g.meaning||"")+'</span>').join("")+
+    '</div></div>'+
+    '<div class="card"><h3>Vocab sekilas ('+(m.vocab||[]).length+')</h3><div class="chips">'+
+    (m.vocab||[]).map(v=>'<span class="chip'+(pr.vocab&&pr.vocab[v.no]?" done":"")+'"><b>'+esc(v.word)+'</b> '+esc(v.reading?"("+v.reading+") ":"")+'— '+esc(v.meaning||"")+'</span>').join("")+
+    '</div></div>';
+  el.innerHTML=h;
+  wireKanaBtn();
+  $("hStart").onclick=()=>{selectedDate=m.date;materiOpen=m.date;go("materi")};
+  $("hQuiz").onclick=()=>{quizDate=m.date;quizState=null;go("quiz")};
+}
+
+/* ---------- Render: Materi (daftar hari -> detail hari) ---------- */
+function renderMateri(){
+  const el=$("materiBody"); if(!el) return;
+  const L=levelOf(levelId);
+  if(isLocked(levelId)){el.innerHTML=levelSegHtml()+lockedCardHtml(L);return}
+  const list=sortedMateri();
+  if(!list.length){el.innerHTML=levelSegHtml()+'<div class="card empty">'+noDataMsg()+'</div>';return}
+  if(!materiOpen||!materiOf(materiOpen)){ renderDayList(el,list); return }
+  renderDayDetail(el,materiOf(materiOpen));
+}
+function renderDayList(el,list){
+  let h=levelSegHtml()+'<div class="card"><h3>📖 Materi Level '+levelId+'</h3><p class="mini" style="margin:0">Ketuk tanggal untuk membuka materinya. Tombol 📄 membuka PDF hari itu.</p></div>';
+  h+=list.map(m=>{
+    const c=counts(levelId,m), pr=progOf(levelId,m.date);
+    const done=(c.g&&c.gd>=c.g)&&(c.v&&c.vd>=c.v);
+    return '<div class="dayrow"><button class="arow" data-day="'+esc(m.date)+'"><span class="t"><b>'+esc(fmtShort(m.date))+' — '+esc(m.theme||"")+(m.contoh?'<span class="badge">Contoh</span>':'')+'</b><span>'+esc(m.context||"")+' • Grammar '+c.gd+'/'+c.g+' • Vocab '+c.vd+'/'+c.v+(pr.quizBest!==null&&pr.quizBest!==undefined?" • Quiz terbaik "+pr.quizBest:"")+'</span></span><span class="st '+(done?"done":"")+'">'+(done?"✓ Tuntas":"Buka ›")+'</span></button>'+
+      (m.pdf?'<a class="pdfbtn" href="'+esc(m.pdf)+'" target="_blank" rel="noopener" aria-label="Buka PDF '+esc(fmtShort(m.date))+'">📄 PDF</a>':'')+'</div>';
+  }).join("");
+  el.innerHTML=h;
+  el.querySelectorAll("[data-day]").forEach(b=>b.onclick=()=>{stopSpeak();materiOpen=b.dataset.day;selectedDate=b.dataset.day;renderMateri();window.scrollTo({top:0})});
+}
+function renderDayDetail(el,m){
+  const pr = progOf(levelId,m.date);
+  let h = '<button class="btn ghost" id="mBack" style="margin-bottom:12px">‹ Daftar Hari</button>'+
+    '<div class="card"><small class="mini">'+esc(fmtDate(m.date))+(m.context?' • '+esc(m.context):'')+' • Level '+levelId+'</small><h2 style="margin-top:4px">'+esc(m.theme||"")+(m.contoh?'<span class="badge">Contoh</span>':'')+'</h2>'+
+    (m.target?'<p class="mini">🎯 '+esc(m.target)+'</p>':'')+
+    (m.pdf?'<a class="btn ghost" href="'+esc(m.pdf)+'" target="_blank" rel="noopener">📄 Buka PDF hari ini</a>':'')+'</div>';
+
+  h += '<div class="card"><h3>📝 Grammar</h3>';
+  (m.grammar||[]).forEach(g=>{
+    const done = !!(pr.grammar&&pr.grammar[g.no]);
+    h += '<div class="gcard" data-g="'+g.no+'"><button class="ghead"><span class="pat">'+esc(g.pattern)+'</span><span class="lvl '+((g.level||"")==="N2"||(g.level||"")==="N4"?"n2":"")+'">'+esc(g.level||levelId)+'</span><span class="arr">▾</span></button>'+
+      '<div class="gbody">'+
+      (g.romaji?'<p><span class="lbl">Romaji</span><br>'+esc(g.romaji)+'</p>':'')+
+      '<p><span class="lbl">Arti</span><br>'+esc(g.meaning||"")+'</p>'+
+      (g.formation?'<p><span class="lbl">Cara membentuk</span><br>'+esc(g.formation)+'</p>':'')+
+      (g.nuance?'<p><span class="lbl">Nuansa</span><br>'+esc(g.nuance)+'</p>':'')+
+      (g.examples||[]).map(ex=>'<div class="ex"><button class="abtn" data-speak="'+esc(ex.jp)+'" aria-label="Dengarkan contoh">🔊</button><div class="jp">'+esc(ex.jp)+'</div><div class="id">'+esc(ex.id)+'</div></div>').join("")+
+      '<button class="check '+(done?"on":"")+'" data-check-g="'+g.no+'">'+(done?"✓ Sudah paham":"Tandai sudah paham")+'</button>'+
+      '</div></div>';
+  });
+  h += '</div>';
+
+  h += '<div class="card"><h3>📚 Vocab</h3><div class="seg"><button data-vm="list" class="'+(vocabMode==="list"?"on":"")+'">Daftar</button><button data-vm="flash" class="'+(vocabMode==="flash"?"on":"")+'">Kartu kilat</button></div><div id="vocabBody"></div></div>';
+
+  if((m.dialog||[]).length){
+    h += '<div class="card"><h3>💬 Dialog</h3>'+ (m.dialog||[]).map((d,i)=>
+      '<div class="bubble '+(i%2?"b":"a")+'"><button class="abtn" data-speak="'+esc(d.jp)+'" aria-label="Dengarkan dialog">🔊</button><div class="sp">'+esc(d.speaker||"")+'</div><div>'+esc(d.jp)+'</div><div class="bid">'+esc(d.id)+'</div></div>').join("") + '</div>';
+  }
+  if((m.bacaan||[]).length){
+    h += '<div class="card"><h3>📰 Bacaan</h3>'+ (m.bacaan||[]).map(b=>
+      '<div class="kinfo"><b>'+esc(b.title||"Bacaan")+'</b>'+
+      '<div class="kjp">'+esc(b.jp)+' <button class="abtn" data-speak="'+esc(b.jp)+'" aria-label="Dengarkan bacaan">🔊</button></div>'+
+      (b.id?'<div class="kid">'+esc(b.id)+'</div>':'')+
+      (b.vocab_notes?'<div class="kid" style="margin-top:6px"><b>Kosakata sulit:</b> '+esc(b.vocab_notes)+'</div>':'')+
+      '</div>').join("") + '</div>';
+  }
+  if(m.tips) h += '<div class="tips"><b>💡 Tips hafalan</b><br>'+esc(m.tips)+'</div>';
+  h += '<button class="btn teal" id="mQuiz">📝 Kerjakan Quiz Hari Ini</button>';
+  el.innerHTML = h;
+
+  $("mBack").onclick=()=>{stopSpeak();materiOpen=null;renderMateri();window.scrollTo({top:0})};
+  $("mQuiz").onclick=()=>{quizDate=m.date;quizState=null;go("quiz")};
+  el.querySelectorAll(".ghead").forEach(b=>b.onclick=()=>b.closest(".gcard").classList.toggle("open"));
+  el.querySelectorAll("[data-check-g]").forEach(b=>b.onclick=()=>{
+    const no=b.dataset.checkG;
+    setProg(levelId,m.date,p=>{p.grammar=p.grammar||{};p.grammar[no]=!p.grammar[no]});
+    queueProgres(m);
+    renderMateri(); renderHome();
+  });
+  el.querySelectorAll("[data-vm]").forEach(b=>b.onclick=()=>{vocabMode=b.dataset.vm;renderMateri()});
+  renderVocab(m);
+}
+function renderVocab(m){
+  const el=$("vocabBody"); if(!el) return;
+  const pr=progOf(levelId,m.date);
+  if(vocabMode==="flash"){
+    el.innerHTML=(m.vocab||[]).map(v=>{
+      const flip=flipped.has(levelId+":"+m.date+":"+v.no), done=!!(pr.vocab&&pr.vocab[v.no]);
+      return '<button class="flash'+(flip?" flip":"")+'" data-flip="'+v.no+'"><span class="fw">'+esc(v.word)+'</span><span class="fr">'+esc(v.reading||"")+'</span>'+
+        '<span class="fm">'+esc(v.meaning||"")+'<br><small>'+esc(v.example_jp||"")+'<br>'+esc(v.example_id||"")+'</small></span>'+
+        '<span class="hint">'+(flip?(done?"✓ Sudah hafal — ketuk kartu untuk membalik":"Ketuk untuk membalik"):"Ketuk kartu untuk melihat arti")+'</span></button>'+
+        '<div class="audiorow"><button class="abtn wide" data-speak="'+esc(v.word)+'" aria-label="Dengarkan kata">🔊 Kata</button>'+
+        (v.example_jp?'<button class="abtn wide" data-speak="'+esc(v.example_jp)+'" aria-label="Dengarkan contoh kalimat">🔊 Contoh</button>':'')+'</div>'+
+        '<button class="check '+(done?"on":"")+'" data-check-v="'+v.no+'" style="margin:-4px 0 12px">'+(done?"✓ Sudah hafal":"Tandai sudah hafal")+'</button>';
+    }).join("");
+    el.querySelectorAll("[data-flip]").forEach(b=>b.onclick=()=>{const k=levelId+":"+m.date+":"+b.dataset.flip;flipped.has(k)?flipped.delete(k):flipped.add(k);renderVocab(m)});
+  } else {
+    el.innerHTML=(m.vocab||[]).map(v=>{
+      const done=!!(pr.vocab&&pr.vocab[v.no]);
+      return '<div class="vrow"><div class="w"><b>'+esc(v.word)+'</b> <span class="rd">'+esc(v.reading||"")+'</span> <button class="abtn" data-speak="'+esc(v.word)+'" aria-label="Dengarkan kata">🔊</button><div class="mn">'+esc(v.meaning||"")+'</div>'+
+        (v.example_jp?'<div class="ex2">'+esc(v.example_jp)+' <button class="abtn" data-speak="'+esc(v.example_jp)+'" aria-label="Dengarkan contoh kalimat">🔊</button><br>'+esc(v.example_id||"")+'</div>':'')+'</div>'+
+        '<button class="check '+(done?"on":"")+'" data-check-v="'+v.no+'">'+(done?"✓ Hafal":"Hafal?")+'</button></div>';
+    }).join("");
+  }
+  el.querySelectorAll("[data-check-v]").forEach(b=>b.onclick=()=>{
+    const no=b.dataset.checkV;
+    setProg(levelId,m.date,p=>{p.vocab=p.vocab||{};p.vocab[no]=!p.vocab[no]});
+    queueProgres(m);
+    renderMateri(); renderHome();
+  });
+}
+
+/* ---------- Quiz: kirim hasil ke server ---------- */
+async function submitQuiz(m,qs,answers,score,startedAt){
+  const body={key:getKey(),device:getDevice(),nama:getNama(),kind:"quiz",
+    session:m.date+"-"+levelId+"-"+Date.now().toString(36),
+    level:levelId,date:m.date,theme:m.theme||"",
+    score:score,total:qs.length,
+    percent:qs.length?Math.round(score/qs.length*100):0,
+    duration:startedAt?Math.max(0,Math.round((Date.now()-startedAt)/1000)):0,
+    answers:qs.map((q,i)=>({no:q.no||i+1,type:q.type||"",
+      question:String(q.question||"").slice(0,300),
+      picked:(answers[i]===undefined||answers[i]===null)?"":"ABCD"[answers[i]],
+      correct:"ABCD"[q.answer]||"A",
+      right:answers[i]===q.answer}))};
+  if(!getKey()) return {sent:false};
+  try{
+    const r=await apiPost(body);
+    if(r&&r.ok) return {sent:true,resp:r};
+  }catch(e){/* offline -> antrekan */}
+  enqueuePost(body);
+  return {sent:false};
+}
+
+/* ---------- Render: Quiz (satu soal per layar) ---------- */
+function fillQuizDates(){
+  const list=sortedMateri();
+  $("quizDateSel").innerHTML=list.map(m=>'<option value="'+esc(m.date)+'">'+esc(fmtShort(m.date))+' — '+esc(m.theme||"")+'</option>').join("");
+  $("quizDateSel").value=quizDate||selectedDate;
+}
+$("quizDateSel").onchange=e=>{stopSpeak();quizDate=e.target.value;quizState=null;renderQuiz()};
+function renderQuiz(){
+  const el=$("quizBody"); if(!el) return;
+  if(isLocked(levelId)){el.innerHTML=lockedCardHtml(levelOf(levelId));fillQuizDates();return}
+  fillQuizDates();
+  const m = materiOf(quizDate||selectedDate);
+  if(!m){el.innerHTML='<div class="card empty">'+(sortedMateri().length?'<b>📝</b>Quiz belum tersedia.':noDataMsg())+'</div>';return}
+  const qs = m.quiz||[];
+  if(!qs.length){el.innerHTML='<div class="card empty"><b>📝</b>Quiz belum tersedia untuk tanggal ini.<br>Coba tanggal lain, ya.</div>';return}
+  if(!quizState || quizState.date!==m.date) quizState={date:m.date,started:false,idx:0,answers:{},finished:false,startedAt:0,sending:false};
+  const st=quizState, pr=progOf(levelId,m.date);
+
+  /* Layar sebelum mulai: peringatan percobaan resmi */
+  if(!st.started && !st.finished){
+    el.innerHTML='<div class="card"><h3>📝 Quiz '+esc(fmtShort(m.date))+' — Level '+levelId+'</h3>'+
+      '<p style="font-size:15px;margin:0 0 8px"><b>'+esc(m.theme||"")+'</b></p>'+
+      '<p class="mini">'+qs.length+' soal • Skor terbaikmu untuk tanggal ini: '+(pr.quizBest===null||pr.quizBest===undefined?"belum ada":pr.quizBest+" / "+qs.length)+'</p>'+
+      '<div class="qexp">⚠️ <b>Penting:</b> Hanya percobaan pertama setiap hari yang dihitung resmi oleh server. Percobaan berikutnya tetap bisa dikerjakan untuk latihan, tetapi tidak mengubah catatan resmi, streak, maupun syarat membuka level berikutnya.</div>'+
+      '<button class="btn pri" id="qStart">▶ Mulai Quiz</button></div>';
+    $("qStart").onclick=()=>{st.started=true;st.startedAt=Date.now();renderQuiz()};
+    return;
+  }
+
+  if(st.finished){
+    const score=qs.reduce((s,q,i)=>s+(st.answers[i]===q.answer?1:0),0);
+    const v=pr.verdict;
+    let vh="";
+    if(st.sending){
+      vh='<div class="verdict off"><b>⏳ Mengirim hasil ke server…</b></div>';
+    } else if(v&&v.sent&&v.percobaan==="Resmi"){
+      vh='<div class="verdict"><b>✅ Tercatat sebagai percobaan RESMI</b>'+
+        'Skor ini masuk catatan resmi server untuk hari ini.'+
+        (v.streak!==null&&v.streak!==undefined?'<br>🔥 Streak Level '+levelId+' sekarang: <b>'+v.streak+' hari</b> — pertahankan, jangan sampai putus!':'')+
+        (v.unlocked?'<br>🎉 Level '+esc(v.unlocked)+' terbuka! Selamat, kerja kerasmu terbayar.':'')+'</div>';
+    } else if(v&&v.sent){
+      vh='<div class="verdict lat"><b>ℹ️ Tercatat sebagai Latihan</b>Percobaan resmi hari ini sudah tercatat sebelumnya, jadi hasil ini tidak mengubah catatan resmi maupun streak. Tetap bagus untuk berlatih!</div>';
+    } else {
+      vh='<div class="verdict off"><b>📴 Hasil tersimpan di perangkat</b>Koneksi ke server sedang tidak tersedia. Hasil ini akan terkirim saat online — buka kembali app ini ketika ada koneksi, ya.</div>';
+    }
+    el.innerHTML='<div class="card score"><p class="mini">Quiz selesai — '+esc(fmtShort(m.date))+'</p><b>'+score+' / '+qs.length+'</b>'+
+      '<p class="mini">Skor terbaik untuk tanggal ini: '+(pr.quizBest===null||pr.quizBest===undefined?score:pr.quizBest)+' / '+qs.length+'</p></div>'+
+      vh+
+      '<div class="card"><button class="btn pri" id="qRetry">↻ Ulangi Quiz (latihan)</button><button class="btn ghost" id="qReview">Lihat Materi Lagi</button></div>';
+    $("qRetry").onclick=()=>{quizState={date:m.date,started:true,idx:0,answers:{},finished:false,startedAt:Date.now(),sending:false};renderQuiz()};
+    $("qReview").onclick=()=>{selectedDate=m.date;materiOpen=m.date;go("materi")};
+    return;
+  }
+
+  const i=st.idx, q=qs[i], picked=st.answers[i];
+  const answered = picked!==undefined;
+  let h='<div class="card"><div class="prow" style="display:flex;justify-content:space-between"><span class="mini">Soal '+(i+1)+' dari '+qs.length+(q.type?' • '+esc(capType(q.type)):'')+'</span><span class="mini">Terbaik: '+(pr.quizBest===null||pr.quizBest===undefined?"—":pr.quizBest)+'</span></div>'+
+    '<div class="pbar" style="margin-bottom:14px"><i style="width:'+(i/qs.length*100)+'%"></i></div>'+
+    '<h3 style="font-size:17px;line-height:1.5">'+esc(q.question)+'</h3>'+
+    (q.options||[]).map((op,oi)=>{
+      let cls="";
+      if(answered){ if(oi===q.answer)cls="sel-ok"; else if(oi===picked)cls="sel-bad"; else cls="dim"; }
+      return '<button class="qopt '+cls+'" data-opt="'+oi+'">'+esc(String.fromCharCode(65+oi))+". "+esc(op)+'</button>';
+    }).join("")+
+    (answered?'<div class="qexp">'+(picked===q.answer?"✅ <b>Benar!</b> ":"❌ <b>Belum tepat.</b> Jawaban benar: <b>"+esc((q.options||[])[q.answer]||"")+"</b>. ")+esc(q.explanation||"")+'</div>'+
+      '<button class="btn pri" id="qNext">'+(i+1>=qs.length?"Lihat Hasil":"Soal Berikutnya ›")+'</button>':'')+
+    '</div>';
+  el.innerHTML=h;
+  el.querySelectorAll("[data-opt]").forEach(b=>b.onclick=()=>{
+    if(st.answers[i]!==undefined) return;
+    st.answers[i]=+b.dataset.opt; renderQuiz();
+  });
+  const nx=$("qNext");
+  if(nx) nx.onclick=async ()=>{
+    if(i+1<qs.length){ st.idx++; renderQuiz(); return }
+    st.finished=true;
+    const score=qs.reduce((s,qq,ii)=>s+(st.answers[ii]===qq.answer?1:0),0);
+    setProg(levelId,m.date,p=>{p.quizLast=score;if(p.quizBest===null||p.quizBest===undefined||score>p.quizBest)p.quizBest=score});
+    st.sending=true; renderQuiz(); renderHome();
+    const res=await submitQuiz(m,qs,st.answers,score,st.startedAt);
+    setProg(levelId,m.date,p=>{p.verdict=res.sent
+      ? {sent:true,percobaan:res.resp.percobaan||"",streak:(res.resp.streak===undefined?null:res.resp.streak),unlocked:res.resp.unlocked||"",at:Date.now()}
+      : {sent:false,at:Date.now()}});
+    st.sending=false;
+    if(res.sent) refreshStatus();
+    renderQuiz(); renderHome();
+  };
+}
+
+/* ---------- Render: Arsip + pencarian ---------- */
+$("searchBox").addEventListener("input",()=>renderArsip());
+function renderArsip(){
+  const q=($("searchBox").value||"").trim().toLowerCase(), el=$("arsipBody"); if(!el) return;
+  if(isLocked(levelId)){el.innerHTML=levelSegHtml()+lockedCardHtml(levelOf(levelId));return}
+  let list=sortedMateri();
+  if(q) list=list.filter(m=>{
+    const hay=[m.theme||"",m.context||"",
+      ...(m.grammar||[]).map(g=>(g.pattern||"")+" "+(g.meaning||"")),
+      ...(m.vocab||[]).map(v=>(v.word||"")+" "+(v.meaning||""))].join(" ").toLowerCase();
+    return hay.includes(q);
+  });
+  if(!list.length){el.innerHTML=levelSegHtml()+'<div class="card empty">'+(q?'<b>🗂️</b>Tidak ada materi yang cocok dengan pencarian itu.':noDataMsg())+'</div>';return}
+  el.innerHTML=levelSegHtml()+list.map(m=>{
+    const c=counts(levelId,m), pr=progOf(levelId,m.date);
+    const done=(c.g&&c.gd>=c.g)&&(c.v&&c.vd>=c.v);
+    return '<button class="arow" data-date="'+esc(m.date)+'"><span class="t"><b>'+esc(fmtShort(m.date))+' — '+esc(m.theme||"")+(m.contoh?'<span class="badge">Contoh</span>':'')+'</b><span>'+esc(m.context||"")+' • Grammar '+c.gd+'/'+c.g+' • Vocab '+c.vd+'/'+c.v+(pr.quizBest!==null&&pr.quizBest!==undefined?" • Quiz terbaik "+pr.quizBest:"")+'</span></span><span class="st '+(done?"done":"")+'">'+(done?"✓ Tuntas":"Buka ›")+'</span></button>';
+  }).join("");
+  el.querySelectorAll("[data-date]").forEach(b=>b.onclick=()=>{selectedDate=b.dataset.date;quizDate=b.dataset.date;quizState=null;materiOpen=b.dataset.date;go("materi")});
+}
+
+function renderAll(){
+  renderHome(); renderMateri(); renderQuiz(); renderArsip(); renderKana();
+  ["home","materi","quiz","arsip","kana","activate"].forEach(x=>{const s=$("view-"+x);if(s)s.hidden=x!==view});
+  updateSrc();
+}
+
+/* ============================================================
+   MATERI TETAP: Hiragana & Katakana
+   ------------------------------------------------------------
+   Materi pendahuluan yang FIX (tidak berubah harian): 10 bab —
+   pengantar, Hiragana 46, Katakana 46, dakuten, yoon, aturan
+   bunyi, angka, sapaan, kata pertama, dan Quiz Kana 20 soal.
+   Sumber data: server (action=kana, konten = JSON per bab) ->
+   cache HP -> seed-kana.json bawaan app.
+   Progres hafalan kana & skor Quiz Kana tersimpan di perangkat.
+   ============================================================ */
+let KANA = {bab:[]};
+let kanaSrc = "";
+let kanaFetched = false;
+const kanaMode = {}; // kode bab -> "grid" | "flash"
+let kanaQuizState = null;
+
+function kanaProgAll(){
+  const p=lsJson(LS.kanaProg,{});
+  return {learned:p.learned||{}, quizBest:(p.quizBest===undefined?null:p.quizBest)};
+}
+function kanaSaveProg(p){lsSet(LS.kanaProg,JSON.stringify(p))}
+function kanaToggle(key){const p=kanaProgAll();if(p.learned[key])delete p.learned[key];else p.learned[key]=true;kanaSaveProg(p)}
+function kanaCountsBab(b){const p=kanaProgAll();let t=0,d=0;(b.kana||[]).forEach(k=>{t++;if(p.learned[b.kode+":"+k.no])d++});(b.vocab||[]).forEach(v=>{t++;if(p.learned[b.kode+":v"+v.no])d++});return{t,d}}
+function applyKana(json,kind){if(!json||!Array.isArray(json.bab)||!json.bab.length)return false;KANA=json;kanaSrc=kind;renderKana();return true}
+/* Ubah respons action=kana ({bab:[{bab,judul,konten}]}) menjadi struktur
+   bab yang sama seperti seed-kana.json. Konten di-parse sebagai JSON bila
+   bisa; bila tidak, diperlakukan sebagai teks ringkasan bab. */
+function parseServerKana(j){
+  if(!j||!Array.isArray(j.bab)||!j.bab.length) return null;
+  const out=[];
+  j.bab.forEach((e,ix)=>{
+    let ch=null;
+    try{ch=JSON.parse(e.konten)}catch(err){ch=null}
+    if(ch&&typeof ch==="object"&&(Array.isArray(ch.kana)||Array.isArray(ch.vocab)||Array.isArray(ch.quiz)||Array.isArray(ch.kartu))){
+      ch.kode=ch.kode||e.bab||("bab"+(ix+1));
+      ch.judul=ch.judul||e.judul||"";
+      out.push(ch);
+    } else if(typeof e.konten==="string"&&e.konten.trim()){
+      out.push({kode:e.bab||("bab"+(ix+1)),judul:e.judul||"",ikon:"📘",ringkasan:e.konten,kartu:[],kana:[],vocab:[],quiz:[]});
+    }
+  });
+  return out.length?out:null;
+}
+async function loadKana(){
+  if(kanaFetched) return; kanaFetched=true;
+  const c=lsJson(LS.kanaCache,null);
+  if(c&&c.data) applyKana(c.data,"cache");
+  if(getKey()){
+    try{
+      const j=await apiGet({action:"kana",key:getKey(),device:getDevice()});
+      const chapters=parseServerKana(j);
+      if(chapters){
+        const data={bab:chapters};
+        applyKana(data,"server");
+        lsSet(LS.kanaCache,JSON.stringify({data:data,at:Date.now()}));
+        return;
+      }
+    }catch(e){/* lanjut ke cadangan */}
+  }
+  try{const j=await fetchJson("seed-kana.json");if(applyKana(j,"seed"))return}catch(e){}
+  renderKana();
+}
+$("kanaBack").onclick=()=>go("home");
+
+function renderKana(){
+  const el=$("kanaBody"); if(!el) return;
+  const babs=KANA.bab||[];
+  if(!babs.length){el.innerHTML='<div class="card empty"><b>あ</b>Materi Hiragana &amp; Katakana sedang dimuat…<br>Bila tidak muncul, periksa koneksi lalu ketuk Sinkronkan.</div>';return}
+  const prog=kanaProgAll();
+  let totT=0,totD=0; babs.forEach(b=>{const c=kanaCountsBab(b);totT+=c.t;totD+=c.d});
+  let h='<div class="card"><h2 style="margin:0 0 6px">あ Hiragana &amp; Katakana ア</h2>'+
+    '<p class="mini" style="margin:0 0 10px">Materi pendahuluan tetap untuk pemula — belajar huruf dari nol dengan suara, kartu kilat, dan tanda hafal. Urutannya sudah disusun dari yang termudah.</p>'+
+    '<div class="prog"><div class="prow"><span>Sudah dihafal</span><b>'+totD+' / '+totT+'</b></div><div class="pbar"><i style="width:'+(totT?totD/totT*100:0)+'%"></i></div></div>'+
+    '<p class="mini">Skor Quiz Kana terbaik: '+(prog.quizBest===null?"belum ada":prog.quizBest+" / 20")+' • Sumber: '+(kanaSrc==="server"?"server Daily Japan":kanaSrc==="cache"?"tersimpan di HP":"cadangan app")+'</p></div>';
+
+  babs.forEach(b=>{
+    const c=kanaCountsBab(b);
+    h+='<div class="card"><h3>'+esc(b.ikon||"")+' '+esc(b.judul||"")+'</h3>'+
+      (b.subjudul?'<p class="mini" style="margin:-6px 0 8px">'+esc(b.subjudul)+'</p>':'')+
+      (b.ringkasan?'<p style="margin:0 0 10px;font-size:14.5px">'+esc(b.ringkasan)+'</p>':'')+
+      (c.t?'<div class="prog"><div class="prow"><span>Progres bab ini</span><b>'+c.d+' / '+c.t+'</b></div><div class="pbar"><i style="width:'+(c.t?c.d/c.t*100:0)+'%"></i></div></div>':'');
+
+    (b.kartu||[]).forEach(k=>{
+      h+='<div class="kinfo"><b>'+esc(k.judul)+'</b>'+
+        (k.jp?'<div class="kjp">'+esc(k.jp)+' <button class="abtn" data-speak="'+esc(k.jp)+'" aria-label="Dengarkan contoh">🔊</button></div>':'')+
+        '<div class="kid">'+esc(k.id)+'</div></div>';
+    });
+
+    if((b.kana||[]).length){
+      const mode=kanaMode[b.kode]||"grid";
+      h+='<div class="seg"><button data-km="'+esc(b.kode)+'" data-mode="grid" class="'+(mode==="grid"?"on":"")+'">Tabel huruf</button><button data-km="'+esc(b.kode)+'" data-mode="flash" class="'+(mode==="flash"?"on":"")+'">Kartu kilat</button></div>';
+      if(mode==="grid"){
+        let lastGrp="";
+        h+='<div class="kgrid">';
+        (b.kana||[]).forEach(k=>{
+          if(k.kelompok&&k.kelompok!==lastGrp){lastGrp=k.kelompok;h+='<div class="kgrp">'+esc(k.kelompok)+'</div>'}
+          const on=!!prog.learned[b.kode+":"+k.no];
+          h+='<div class="ktile'+(on?" on":"")+'"><button class="kmk" data-kmark="'+esc(b.kode)+':'+k.no+'" aria-label="Tandai hafal">'+(on?"✓":"✓")+'</button>'+
+            '<button class="kk'+(String(k.kana).length>1?" long":"")+'" data-kshow="'+esc(b.kode)+'" data-kana="'+esc(k.kana)+'" data-romaji="'+esc(k.romaji)+'" data-note="'+esc(k.catatan||"")+'">'+esc(k.kana)+'</button>'+
+            '<div class="kr">'+esc(k.romaji)+'</div></div>';
+        });
+        h+='</div><div class="knote" id="knote-'+esc(b.kode)+'">👆 Ketuk hurufnya untuk mendengar bunyinya — trik hafalannya muncul di sini.</div>';
+      } else {
+        (b.kana||[]).forEach(k=>{
+          const fk="kanaflash:"+b.kode+":"+k.no, flip=flipped.has(fk), on=!!prog.learned[b.kode+":"+k.no];
+          h+='<button class="flash'+(flip?" flip":"")+'" data-kflip="'+esc(fk)+'"><span class="fw">'+esc(k.kana)+'</span>'+
+            '<span class="fm"><b style="font-size:19px">'+esc(k.romaji)+'</b>'+(k.catatan?'<br><small>'+esc(k.catatan)+'</small>':'')+'</span>'+
+            '<span class="hint">'+(flip?"Ketuk untuk membalik":"Ketuk kartu untuk melihat romaji")+'</span></button>'+
+            '<div class="audiorow"><button class="abtn wide" data-speak="'+esc(k.kana)+'" aria-label="Dengarkan huruf">🔊 Dengar</button></div>'+
+            '<button class="check '+(on?"on":"")+'" data-kmark="'+esc(b.kode)+':'+k.no+'" style="margin:-4px 0 12px">'+(on?"✓ Sudah hafal":"Tandai sudah hafal")+'</button>';
+        });
+      }
+    }
+
+    if((b.vocab||[]).length){
+      b.vocab.forEach(v=>{
+        const on=!!prog.learned[b.kode+":v"+v.no];
+        h+='<div class="vrow"><div class="w"><b>'+esc(v.word)+'</b> <span class="rd">'+esc(v.reading||"")+'</span> <button class="abtn" data-speak="'+esc(v.word)+'" aria-label="Dengarkan kata">🔊</button><div class="mn">'+esc(v.meaning||"")+'</div>'+
+          (v.example_jp?'<div class="ex2">'+esc(v.example_jp)+' <button class="abtn" data-speak="'+esc(v.example_jp)+'" aria-label="Dengarkan contoh kalimat">🔊</button><br>'+esc(v.example_id||"")+'</div>':'')+'</div>'+
+          '<button class="check '+(on?"on":"")+'" data-kmark="'+esc(b.kode)+':v'+v.no+'">'+(on?"✓ Hafal":"Hafal?")+'</button></div>';
+      });
+    }
+
+    if((b.quiz||[]).length){
+      const qs=b.quiz, st=kanaQuizState;
+      if(!st){
+        h+='<button class="btn pri" id="kqStart">▶ Mulai Quiz Kana ('+qs.length+' soal)</button>'+
+           '<p class="mini" style="margin-top:8px">Skor terbaikmu: '+(prog.quizBest===null?"belum ada":prog.quizBest+" / "+qs.length)+'. Hasil quiz kana tersimpan di perangkat ini.</p>';
+      } else if(st.finished){
+        const score=qs.reduce((s,q,i)=>s+(st.answers[i]===q.answer?1:0),0);
+        h+='<div class="score"><p class="mini">Quiz Kana selesai!</p><b>'+score+' / '+qs.length+'</b>'+
+          '<p class="mini">Skor terbaik: '+(prog.quizBest===null?score:prog.quizBest)+' / '+qs.length+'</p>'+
+          '<button class="btn pri" id="kqRetry">↻ Ulangi Quiz</button><button class="btn ghost" id="kqDone">Kembali ke Bab</button></div>';
+      } else {
+        const i=st.idx, q=qs[i], picked=st.answers[i], answered=picked!==undefined;
+        h+='<div class="prow" style="display:flex;justify-content:space-between"><span class="mini">Soal '+(i+1)+' dari '+qs.length+(q.type?' • '+esc(q.type):'')+'</span><span class="mini">Terbaik: '+(prog.quizBest===null?"—":prog.quizBest)+'</span></div>'+
+          '<div class="pbar" style="margin-bottom:14px"><i style="width:'+(i/qs.length*100)+'%"></i></div>'+
+          '<h3 style="font-size:17px;line-height:1.5">'+esc(q.question)+'</h3>'+
+          (q.options||[]).map((op,oi)=>{
+            let cls="";
+            if(answered){ if(oi===q.answer)cls="sel-ok"; else if(oi===picked)cls="sel-bad"; else cls="dim"; }
+            return '<button class="qopt '+cls+'" data-kqopt="'+oi+'">'+esc(String.fromCharCode(65+oi))+". "+esc(op)+'</button>';
+          }).join("")+
+          (answered?'<div class="qexp">'+(picked===q.answer?"✅ <b>Benar!</b> ":"❌ <b>Belum tepat.</b> Jawaban benar: <b>"+esc((q.options||[])[q.answer]||"")+"</b>. ")+esc(q.explanation||"")+'</div>'+
+            '<button class="btn pri" id="kqNext">'+(i+1>=qs.length?"Lihat Hasil":"Soal Berikutnya ›")+'</button>':'');
+      }
+    }
+
+    if(b.tips) h+='<div class="tips" style="margin-top:12px"><b>💡 Tips</b><br>'+esc(b.tips)+'</div>';
+    h+='</div>';
+  });
+  el.innerHTML=h;
+
+  el.querySelectorAll("[data-km]").forEach(x=>x.onclick=()=>{kanaMode[x.dataset.km]=x.dataset.mode;renderKana()});
+  el.querySelectorAll("[data-kshow]").forEach(x=>x.onclick=()=>{
+    speak(x.dataset.kana);
+    const note=$("knote-"+x.dataset.kshow);
+    if(note) note.innerHTML="<b>"+esc(x.dataset.kana)+" = "+esc(x.dataset.romaji)+"</b>"+(x.dataset.note?" — "+esc(x.dataset.note):"");
+  });
+  el.querySelectorAll("[data-kmark]").forEach(x=>x.onclick=()=>{kanaToggle(x.dataset.kmark);renderKana()});
+  el.querySelectorAll("[data-kflip]").forEach(x=>x.onclick=()=>{const k=x.dataset.kflip;flipped.has(k)?flipped.delete(k):flipped.add(k);renderKana()});
+  const kqs=$("kqStart"); if(kqs) kqs.onclick=()=>{kanaQuizState={idx:0,answers:{},finished:false,startedAt:Date.now()};renderKana()};
+  const kqr=$("kqRetry"); if(kqr) kqr.onclick=()=>{kanaQuizState={idx:0,answers:{},finished:false,startedAt:Date.now()};renderKana()};
+  const kqd=$("kqDone"); if(kqd) kqd.onclick=()=>{kanaQuizState=null;renderKana()};
+  el.querySelectorAll("[data-kqopt]").forEach(x=>x.onclick=()=>{
+    const st=kanaQuizState; if(!st||st.finished) return;
+    if(st.answers[st.idx]!==undefined) return;
+    st.answers[st.idx]=+x.dataset.kqopt; renderKana();
+  });
+  const kqn=$("kqNext");
+  if(kqn) kqn.onclick=()=>{
+    const st=kanaQuizState; if(!st) return;
+    const quizBab=(KANA.bab||[]).find(x=>(x.quiz||[]).length); if(!quizBab) return;
+    const qs=quizBab.quiz;
+    if(st.idx+1>=qs.length){
+      st.finished=true;
+      const score=qs.reduce((s,q,i)=>s+(st.answers[i]===q.answer?1:0),0);
+      const p=kanaProgAll(); if(p.quizBest===null||score>p.quizBest)p.quizBest=score; kanaSaveProg(p);
+    } else st.idx++;
+    renderKana();
+  };
+}
+
+/* ---------- Aktivasi & header ---------- */
+function actError(msg){
+  const e=$("actErr");
+  if(!msg){e.hidden=true;e.textContent="";return}
+  e.hidden=false; e.textContent=msg;
+}
+$("actBtn").onclick=async ()=>{
+  const nama=$("actNama").value.trim(), kode=$("actKey").value.trim();
+  actError("");
+  if(!nama){actError("Isi dulu namamu, ya — nama ini tampil sebagai sambutan dan identitas belajarmu.");$("actNama").focus();return}
+  if(!kode){actError("Isi dulu kode akses dari admin.");$("actKey").focus();return}
+  const btn=$("actBtn"); btn.disabled=true; btn.textContent="Memeriksa kode…";
+  try{
+    const j=await apiGet({action:"status",key:kode,device:getDevice(),nama:nama});
+    if(j&&j.ok&&j.user){
+      lsSet(LS.key,kode); lsSet(LS.nama,nama);
+      saveStatus(j.user);
+      renderUserName();
+      toast("Halo, "+nama+"! Kode akses aktif ✓");
+      enterApp();
+      return;
+    }
+    if(j&&j.error==="unauthorized"){actError("Kode tidak dikenal. Periksa kembali kode dari admin.");return}
+    if(j&&j.error==="device_limit"){actError("Kode ini sudah mencapai batas device. Hubungi admin untuk reset device.");return}
+    actError("Server menjawab: "+((j&&j.error)||"tidak dikenal")+". Coba lagi, ya.");
+  }catch(e){
+    actError("Tidak bisa menghubungi server. Periksa koneksi internetmu, lalu coba lagi.");
+  }finally{
+    btn.disabled=false; btn.textContent="Aktifkan";
+  }
+};
+$("userName").onclick=()=>{
+  const v=prompt("Nama pengguna di perangkat ini\n(akan tampil sebagai \"Welcome, nama\" di bawah judul Daily Japan):",getNama());
+  if(v===null) return;
+  lsSet(LS.nama,v.trim());
+  renderUserName();
+  refreshStatus();
+  toast(getNama()?("Halo, "+getNama()+"!"):"Nama pengguna dihapus");
+};
+$("btnKey").onclick=async ()=>{
+  const cur=getKey();
+  const k=prompt("Kode akses saat ini: "+(cur?"(sudah terisi)":"(belum diisi)")+"\nUbah kode di sini bila admin memberimu kode baru, lalu ketuk OK. Setelah ini kamu bisa mengubah NAMA pengguna:",cur);
+  if(k===null) return;
+  const nk=k.trim();
+  if(nk!==cur){
+    lsSet(LS.key,nk);
+    saveStatus(null);
+    Object.keys(LVDATA).forEach(lv=>delete LVDATA[lv]);
+  }
+  const nm=prompt("Nama pengguna di perangkat ini\n(akan tampil sebagai \"Welcome, nama\" di bawah judul Daily Japan):",getNama());
+  if(nm!==null){lsSet(LS.nama,nm.trim());renderUserName()}
+  if(nk){
+    toast("Kode akses & nama disimpan — memeriksa status…");
+    const ok=await refreshStatus();
+    if(!ok&&!USER) toast("Belum terhubung ke server — data contoh ditampilkan dulu");
+    loadLevel(levelId,false);
+    flushQueue();
+  } else {
+    toast("Kode akses dihapus — app menampilkan data contoh");
+    Object.keys(LVDATA).forEach(lv=>delete LVDATA[lv]);
+    loadLevel(levelId,false);
+  }
+  renderAll();
+};
+$("btnSync").onclick=async ()=>{
+  $("srcLabel").textContent="Menyinkronkan…";
+  await refreshStatus();
+  flushQueue();
+  loadLevel(levelId,true);
+  if(view==="kana"){kanaFetched=false;loadKana()}
+};
+
+/* ---------- Mulai ---------- */
+function enterApp(){
+  go("home");
+  updateSrc();
+  renderAll();
+  refreshStatus();
+  loadLevel(levelId,false);
+  flushQueue();
+}
+renderUserName();
+getDevice();
+if(!getKey()){
+  view="activate";
+  ["home","materi","quiz","arsip","kana"].forEach(x=>{$("view-"+x).hidden=true});
+  $("view-activate").hidden=false;
+  $("mainNav").hidden=true;
+  $("srcLabel").textContent="Aktifkan kode akses untuk mulai belajar";
+  const n=getNama(); if(n) $("actNama").value=n;
+} else {
+  enterApp();
+}
+</script>
+</body>
+</html>
