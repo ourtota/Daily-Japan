@@ -213,6 +213,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
 
   <!-- MATERI -->
   <section id="view-materi" hidden>
+    <label class="mini" for="dateSel">Pilih tanggal materi</label>
+    <select id="dateSel" aria-label="Pilih tanggal materi"></select>
     <div id="materiBody"></div>
   </section>
 
@@ -447,6 +449,13 @@ function defaultQuizDate(){
 }
 /* Tanggal quiz yang dipakai: pilihan eksplisit user menang; selain itu hari ini. */
 function quizDateWanted(){return quizDate||selectedDate||defaultQuizDate()}
+/* Tanggal materi yang ditampilkan di halaman Materi: pilihan eksplisit user
+   (dropdown / Beranda / Arsip) menang; selain itu materi hari ini — logika
+   default yang sama dengan halaman Quiz (defaultQuizDate). */
+function materiDateWanted(){
+  if(selectedDate&&materiOf(selectedDate)) return selectedDate;
+  return defaultQuizDate();
+}
 function counts(lv,m){
   if(!m) return {g:0,v:0,gd:0,vd:0};
   const pr=progOf(lv,m.date);
@@ -673,31 +682,27 @@ function renderHome(){
   $("hQuiz").onclick=()=>{quizDate=m.date;quizState=null;go("quiz")};
 }
 
-/* ---------- Render: Materi (daftar hari -> detail hari) ---------- */
+/* ---------- Render: Materi (dropdown tanggal -> detail langsung, seperti versi keluarga) ---------- */
+function fillMateriDates(){
+  const list=sortedMateri();
+  $("dateSel").innerHTML=list.map(m=>'<option value="'+esc(m.date)+'">'+esc(fmtShort(m.date))+' — '+esc(m.theme||"")+'</option>').join("");
+  $("dateSel").value=materiDateWanted();
+}
+$("dateSel").onchange=e=>{stopSpeak();selectedDate=e.target.value;renderMateri();renderHome()};
 function renderMateri(){
   const el=$("materiBody"); if(!el) return;
   const L=levelOf(levelId);
-  if(isLocked(levelId)){el.innerHTML=levelSegHtml()+lockedCardHtml(L);return}
+  if(isLocked(levelId)){$("dateSel").innerHTML="";el.innerHTML=levelSegHtml()+lockedCardHtml(L);return}
   const list=sortedMateri();
-  if(!list.length){el.innerHTML=levelSegHtml()+'<div class="card empty">'+noDataMsg()+'</div>';return}
-  if(!materiOpen||!materiOf(materiOpen)){ renderDayList(el,list); return }
-  renderDayDetail(el,materiOf(materiOpen));
-}
-function renderDayList(el,list){
-  let h=levelSegHtml()+'<div class="card"><h3>📖 Materi Level '+levelId+'</h3><p class="mini" style="margin:0">Ketuk tanggal untuk membuka materinya. Tombol 📄 membuka PDF hari itu.</p></div>';
-  h+=list.map(m=>{
-    const c=counts(levelId,m), pr=progOf(levelId,m.date);
-    const done=(c.g&&c.gd>=c.g)&&(c.v&&c.vd>=c.v);
-    return '<div class="dayrow"><button class="arow" data-day="'+esc(m.date)+'"><span class="t"><b>'+esc(fmtShort(m.date))+' — '+esc(m.theme||"")+(m.contoh?'<span class="badge">Contoh</span>':'')+'</b><span>'+esc(m.context||"")+' • Grammar '+c.gd+'/'+c.g+' • Vocab '+c.vd+'/'+c.v+(pr.quizBest!==null&&pr.quizBest!==undefined?" • Quiz terbaik "+pr.quizBest:"")+'</span></span><span class="st '+(done?"done":"")+'">'+(done?"✓ Tuntas":"Buka ›")+'</span></button>'+
-      (m.pdf?'<a class="pdfbtn" href="'+esc(m.pdf)+'" target="_blank" rel="noopener" aria-label="Buka PDF '+esc(fmtShort(m.date))+'">📄 PDF</a>':'')+'</div>';
-  }).join("");
-  el.innerHTML=h;
-  el.querySelectorAll("[data-day]").forEach(b=>b.onclick=()=>{stopSpeak();materiOpen=b.dataset.day;selectedDate=b.dataset.day;renderMateri();window.scrollTo({top:0})});
+  if(!list.length){$("dateSel").innerHTML="";el.innerHTML=levelSegHtml()+'<div class="card empty">'+noDataMsg()+'</div>';return}
+  fillMateriDates();
+  const m=materiOf(materiDateWanted());
+  if(!m){el.innerHTML=levelSegHtml()+'<div class="card empty">'+noDataMsg()+'</div>';return}
+  renderDayDetail(el,m);
 }
 function renderDayDetail(el,m){
   const pr = progOf(levelId,m.date);
-  let h = '<button class="btn ghost" id="mBack" style="margin-bottom:12px">‹ Daftar Hari</button>'+
-    '<div class="card"><small class="mini">'+esc(fmtDate(m.date))+(m.context?' • '+esc(m.context):'')+' • Level '+levelId+'</small><h2 style="margin-top:4px">'+esc(m.theme||"")+(m.contoh?'<span class="badge">Contoh</span>':'')+'</h2>'+
+  let h = '<div class="card"><small class="mini">'+esc(fmtDate(m.date))+(m.context?' • '+esc(m.context):'')+' • Level '+levelId+'</small><h2 style="margin-top:4px">'+esc(m.theme||"")+(m.contoh?'<span class="badge">Contoh</span>':'')+'</h2>'+
     (m.target?'<p class="mini">🎯 '+esc(m.target)+'</p>':'')+
     (m.pdf?'<a class="btn ghost" href="'+esc(m.pdf)+'" target="_blank" rel="noopener">📄 Buka PDF hari ini</a>':'')+'</div>';
 
@@ -734,7 +739,6 @@ function renderDayDetail(el,m){
   h += '<button class="btn teal" id="mQuiz">📝 Kerjakan Quiz Hari Ini</button>';
   el.innerHTML = h;
 
-  $("mBack").onclick=()=>{stopSpeak();materiOpen=null;renderMateri();window.scrollTo({top:0})};
   $("mQuiz").onclick=()=>{quizDate=m.date;quizState=null;go("quiz")};
   el.querySelectorAll(".ghead").forEach(b=>b.onclick=()=>b.closest(".gcard").classList.toggle("open"));
   el.querySelectorAll("[data-check-g]").forEach(b=>b.onclick=()=>{
