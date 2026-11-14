@@ -48,8 +48,24 @@ main{max-width:560px;margin:0 auto;padding:14px 16px 112px}
 .mini{font-size:13px;color:var(--mute);line-height:1.6}
 select,input[type=search],input[type=text]{width:100%;border:0;background:var(--chip);border-radius:14px;padding:13px 14px;font-size:16px;outline:none;min-height:48px;margin-bottom:12px}
 /* Dropdown tanggal Materi: dibuat bold & mencolok agar mudah diperhatikan (Tota, 2026-11-14) */
-#view-materi label[for="dateSel"]{display:block;font-size:15px;font-weight:800;color:var(--teal);margin:0 0 6px}
-#dateSel{font-size:17px;font-weight:800;background:#FFF3E2;border:2px solid var(--orange);color:#7A3E00;min-height:54px;box-shadow:0 2px 8px rgba(184,92,30,.18)}
+#view-materi label[for="dateSel"],#view-quiz label[for="quizDateSel"]{display:block;font-size:15px;font-weight:800;color:var(--teal);margin:0 0 6px}
+#dateSel,#quizDateSel{font-size:17px;font-weight:800;background:#FFF3E2;border:2px solid var(--orange);color:#7A3E00;min-height:54px;box-shadow:0 2px 8px rgba(184,92,30,.18)}
+/* Pop-up beli kode akses (gaya sama seperti pop-up Prompt3D-AI — arahan Tota 2026-11-14) */
+.buymodal{position:fixed;inset:0;z-index:90;background:rgba(38,24,16,.55);display:flex;align-items:flex-end;justify-content:center}
+.buymodal[hidden]{display:none}
+.buybox{background:#FFFDF9;width:100%;max-width:520px;max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;padding:22px 20px 26px;box-shadow:0 -8px 30px rgba(0,0,0,.3)}
+.buybox h2{font-size:21px;margin:0 0 6px;color:#3E2723}
+.buyprice{font-size:34px;font-weight:900;color:#3E2723;line-height:1.15}
+.buyprice s{font-size:19px;color:#A1887F;font-weight:700;margin-right:8px}
+.buysub{color:#8D6E63;font-size:13.5px;margin:2px 0 12px}
+.buybox p{font-size:14.5px;line-height:1.55;color:#3E2723;margin:0}
+.buybox ul{list-style:none;margin:12px 0;padding:0}
+.buybox li{font-size:14.5px;line-height:1.5;margin:9px 0}
+.buyfree{display:block;text-align:center;background:#FDEBD7;color:#D96C1E;font-weight:800;font-size:16.5px;border-radius:16px;padding:16px 12px;text-decoration:none;margin:14px 0}
+.buypay{background:#F4FBF3;border:1.5px solid #BFE3B8;border-radius:16px;padding:13px 14px;font-size:14px;line-height:1.55;margin:0 0 14px}
+.buywa{display:block;text-align:center;background:#22C064;color:#fff;font-weight:800;font-size:17px;border-radius:16px;padding:16px 12px;text-decoration:none;margin:0 0 10px}
+.buylater{display:block;width:100%;text-align:center;background:#FDEBD7;color:#D96C1E;font-weight:800;font-size:16.5px;border:0;border-radius:16px;padding:15px 12px;cursor:pointer}
+.buyjp{display:block;text-align:center;font-size:13px;color:var(--teal);margin-top:12px}
 .gcard{border:1.5px solid var(--teal);border-radius:16px;margin-bottom:11px;overflow:hidden;background:#F8FBFA}
 .ghead{width:100%;display:flex;gap:10px;align-items:flex-start;background:none;border:0;padding:14px;text-align:left;cursor:pointer;min-height:52px}
 .ghead .pat{flex:1;font-size:18px;font-weight:800;color:var(--teal)}
@@ -172,7 +188,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
     </div>
   </div>
   <p class="status"><i></i><span id="srcLabel">Memuat data…</span></p>
-  <div id="demoBar" hidden style="background:#FFF7E6;border:1.5px solid #E8A33D;color:#7A4d00;border-radius:14px;padding:10px 12px;margin-bottom:12px;font-size:13px;line-height:1.5">🧪 <b>Mode Contoh</b> — kamu sedang mencoba aplikasi dengan data contoh (3 hari per level, semua level terbuka). Quiz &amp; progres <b>tidak tercatat</b>. <button id="demoAct" style="float:right;background:#E8A33D;color:#fff;border:0;border-radius:9px;padding:5px 10px;font-weight:700;cursor:pointer">Aktifkan Kode Akses</button></div>
+  <div id="demoBar" hidden style="background:#FFF7E6;border:1.5px solid #E8A33D;color:#7A4d00;border-radius:14px;padding:10px 12px;margin-bottom:12px;font-size:13px;line-height:1.5">🧪 <b>Mode Contoh</b> — semua tanggal tampil, tapi hanya materi <b>1 &amp; 2 Nov 2026</b> yang terbuka (tanggal lain 🔒, semua level bisa dilihat). Quiz &amp; progres <b>tidak tercatat</b>. <button id="demoAct" style="float:right;background:#E8A33D;color:#fff;border:0;border-radius:9px;padding:5px 10px;font-weight:700;cursor:pointer">Aktifkan Kode Akses</button></div>
 
   <!-- AKTIVASI -->
   <section id="view-activate" hidden>
@@ -186,7 +202,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
       <div class="acterr" id="actErr" hidden></div>
       <button class="btn pri" id="actBtn">Aktifkan</button>
       <button class="btn ghost" id="demoBtn" style="margin-top:10px">🧪 Coba Fitur Aplikasi dengan Data Contoh</button>
-      <p class="mini" style="margin-top:12px">Satu kode berlaku untuk satu pengguna, dan jumlah perangkat dibatasi oleh admin. Atau coba dulu mode contoh di atas — semua fitur bisa dilihat dengan data contoh 3 hari per level, tanpa kode (quiz dan progres tidak tercatat).</p>
+      <button class="btn" id="buyBtn" style="margin-top:10px;background:#22C064;color:#fff">🛒 Beli Kode Akses — Rp 99.000</button>
+      <p class="mini" style="margin-top:12px">Satu kode berlaku untuk satu pengguna, dan jumlah perangkat dibatasi oleh admin. Atau coba dulu mode contoh di atas — semua tanggal tampil, tapi hanya materi 1 &amp; 2 November 2026 yang terbuka; tanggal lain terbuka dengan kode akses (quiz dan progres mode contoh tidak tercatat).</p>
       <div style="margin-top:18px;border-radius:20px;overflow:hidden;background:linear-gradient(150deg,#075E54 0%,#128C7E 55%,#25D366 130%);color:#fff;box-shadow:0 10px 24px rgba(7,94,84,.35)">
         <div style="padding:18px 18px 6px;text-align:center">
           <div style="width:58px;height:58px;margin:0 auto 8px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.25)">
@@ -223,7 +240,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
 
   <!-- QUIZ -->
   <section id="view-quiz" hidden>
-    <label class="mini" for="quizDateSel">Quiz untuk tanggal</label>
+    <label class="mini" for="quizDateSel">📅 Quiz untuk tanggal</label>
     <select id="quizDateSel" aria-label="Pilih tanggal quiz"></select>
     <div id="quizBody"></div>
   </section>
@@ -240,6 +257,27 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
     <div id="kanaBody"></div>
   </section>
 </main>
+
+<!-- POP-UP BELI KODE AKSES (gaya pop-up Prompt3D-AI) -->
+<div class="buymodal" id="buyModal" hidden>
+  <div class="buybox" role="dialog" aria-modal="true" aria-labelledby="buyTitle">
+    <h2 id="buyTitle">🔓 Buka Semua Materi Daily Japan!</h2>
+    <div class="buyprice"><s>Rp 250.000</s>Rp 99.000</div>
+    <div class="buysub">sekali bayar • berlaku selamanya • tanpa biaya bulanan</div>
+    <p>Di Mode Contoh kamu hanya bisa membuka materi <b>1 &amp; 2 November 2026</b>. Dengan kode akses, semua tanggal terbuka — termasuk materi baru yang terbit <b>setiap hari jam 05.00</b>.</p>
+    <ul>
+      <li>✅ Semua materi harian terbuka (grammar, kosakata, dialog &amp; bacaan, N5–N1)</li>
+      <li>✅ Quiz harian 10 soal + streak untuk membuka level N2 &amp; N1</li>
+      <li>✅ PDF infografis harian siap diunduh</li>
+      <li>✅ 1 kode akses khusus untukmu (kuota hanya 20 pengguna)</li>
+    </ul>
+    <a class="buyfree" href="https://drive.google.com/file/d/1rzgZTCiitqSqdBQbvvzOYWSTjY1C-GLV/view?usp=drivesdk" target="_blank" rel="noopener">🎁 Unduh PDF Contoh GRATIS (1 Nov 2026)</a>
+    <div class="buypay">💳 <b>Pembayaran via transfer bank.</b> Ketuk tombol di bawah untuk memesan — admin akan mengirimkan nomor rekening tujuan transfer, dan kode aksesmu dikirim setelah pembayaran terkonfirmasi.</div>
+    <a class="buywa" href="https://wa.me/6281398020968?text=Halo%20Admin%20Daily%20Japan%20%F0%9F%91%8B%0ASaya%20mau%20*membeli%20kode%20akses*%20aplikasi%20Daily%20Japan%20(Rp%2099.000%20%E2%80%94%20sekali%20bayar%2C%20berlaku%20selamanya).%0A%0ANama%20saya%3A%20%0ALevel%20yang%20ingin%20saya%20pelajari%3A%20%28N5%20%2F%20N4%20%2F%20N3%29%0ADomisili%3A%20%28Jepang%20%2F%20Indonesia%29%0A%0ATerima%20kasih%20banyak%20%F0%9F%99%8F" target="_blank" rel="noopener">💬 Pesan Kode via WhatsApp Admin</a>
+    <button class="buylater" id="buyLater">Nanti Dulu</button>
+    <a class="buyjp" href="https://wa.me/818042136777?text=Halo%20Admin%20Daily%20Japan%20%F0%9F%91%8B%0ASaya%20mau%20meminta%20*kode%20akses*%20untuk%20aplikasi%20Daily%20Japan.%0A%0ANama%20saya%3A%20%0ALevel%20yang%20ingin%20saya%20pelajari%3A%20%28N5%20%2F%20N4%20%2F%20N3%29%0ADomisili%3A%20%28Jepang%20%2F%20Indonesia%29%0A%0ATerima%20kasih%20banyak%20%F0%9F%99%8F" target="_blank" rel="noopener">Domisili Jepang? Chat Admin JP +81 80-4213-6777 ›</a>
+  </div>
+</div>
 
 <nav class="bnav" id="mainNav" aria-label="Navigasi utama" hidden><div class="bnav-in">
   <button data-view="home" class="on"><span class="ic">🏠</span>Beranda</button>
@@ -545,11 +583,34 @@ function seedDaysFor(lv){
   const arr=(SEED&&SEED[lv])||[];
   return arr.map(d=>{
     const c=JSON.parse(JSON.stringify(d));
-    c.date=dateWithOffset(c.offset||0);
+    c.date=c.date||dateWithOffset(c.offset||0); // seed baru bertanggal tetap (1 & 2 Nov 2026)
     delete c.offset;
     c.contoh=true;
     return c;
   });
+}
+/* ---------- Mode Contoh: katalog tanggal publik + gembok per tanggal ----------
+   Server menyediakan action=catalog (TANPA kode akses) berisi hanya tanggal +
+   tema tiap level. Di mode contoh, semua tanggal tampil di dropdown; yang
+   terbuka penuh hanya paket seed (1 & 2 Nov 2026) — tanggal lain menjadi
+   penanda "locked" tanpa konten, dan memilihnya membuka pop-up beli kode. */
+let CATALOG=null;
+async function loadCatalog(){
+  if(CATALOG) return CATALOG;
+  try{const j=await fetchJson(API+"?action=catalog"); if(j&&j.ok&&j.catalog) CATALOG=j.catalog;}catch(e){}
+  if(!CATALOG) CATALOG={};
+  return CATALOG;
+}
+async function demoDaysFor(lv){
+  const full={};
+  seedDaysFor(lv).forEach(d=>{full[d.date]=d});
+  const cat=await loadCatalog();
+  const list=(cat[lv]||[]).map(c=>{
+    if(full[c.date]) return full[c.date];
+    return {date:c.date, theme:c.theme||"", context:"", target:"", tips:"", pdf:"", locked:true, grammar:[], vocab:[], dialog:[], bacaan:[], quiz:[]};
+  });
+  Object.keys(full).forEach(dt=>{if(!list.some(x=>x.date===dt)) list.push(full[dt])});
+  return list.length?list:seedDaysFor(lv);
 }
 async function loadLevel(lv,manual){
   // (1) cache perangkat untuk tampilan seketika
@@ -591,7 +652,7 @@ async function loadLevel(lv,manual){
   //     dan hanya selama server belum pernah memberi data asli level ini.
   if(!LVDATA[lv]||!LVDATA[lv].materi.length){
     await loadSeedFile();
-    const sd=seedDaysFor(lv);
+    const sd=DEMO?await demoDaysFor(lv):seedDaysFor(lv);
     if(sd.length) LVDATA[lv]={materi:sd,kind:"seed"};
   }
   if(lv===levelId){updateSrc();renderAll()}
@@ -670,7 +731,8 @@ function levelCardsHtml(){
 }
 function renderHome(){
   const el=$("view-home"); if(!el) return;
-  const m = materiOf(selectedDate) || sortedMateri()[0];
+  let m = materiOf(selectedDate) || sortedMateri()[0];
+  if(m&&m.locked){const open=sortedMateri().find(x=>!x.locked); if(open) m=open;} /* Mode Contoh: hero pakai hari terbuka terbaru */
   let h = kanaBtnHtml() + levelCardsHtml();
   if(lockNote) h += '<div class="locknote">'+lockNote+'</div>';
   if(isLocked(levelId)){
@@ -707,10 +769,10 @@ function renderHome(){
 /* ---------- Render: Materi (dropdown tanggal -> detail langsung, seperti versi keluarga) ---------- */
 function fillMateriDates(){
   const list=sortedMateri();
-  $("dateSel").innerHTML=list.map(m=>'<option value="'+esc(m.date)+'">'+esc(fmtShort(m.date))+' — '+esc(m.theme||"")+'</option>').join("");
+  $("dateSel").innerHTML=list.map(m=>'<option value="'+esc(m.date)+'">'+(m.locked?'🔒 ':'')+esc(fmtShort(m.date))+' — '+esc(m.theme||"")+'</option>').join("");
   $("dateSel").value=materiDateWanted();
 }
-$("dateSel").onchange=e=>{stopSpeak();selectedDate=e.target.value;renderMateri();renderHome()};
+$("dateSel").onchange=e=>{stopSpeak();selectedDate=e.target.value;renderMateri();renderHome();const mm=materiOf(e.target.value);if(DEMO&&mm&&mm.locked)showBuy()};
 function renderMateri(){
   const el=$("materiBody"); if(!el) return;
   const L=levelOf(levelId);
@@ -723,6 +785,10 @@ function renderMateri(){
   renderDayDetail(el,m);
 }
 function renderDayDetail(el,m){
+  if(m.locked){ /* tanggal terkunci di Mode Contoh: tema terlihat, konten digembok */
+    el.innerHTML='<div class="card"><small class="mini">'+esc(fmtDate(m.date))+' • Level '+levelId+'</small><h2 style="margin-top:4px">'+esc(m.theme||"")+'</h2><p class="mini">🔒 Materi tanggal ini terkunci di Mode Contoh — yang terbuka penuh hanya materi <b>1 &amp; 2 November 2026</b>.</p><button class="btn" style="background:#22C064;color:#fff" onclick="showBuy()">🔓 Buka Semua Materi — Rp 99.000</button></div>';
+    return;
+  }
   const pr = progOf(levelId,m.date);
   let h = '<div class="card"><small class="mini">'+esc(fmtDate(m.date))+(m.context?' • '+esc(m.context):'')+' • Level '+levelId+'</small><h2 style="margin-top:4px">'+esc(m.theme||"")+(m.contoh?'<span class="badge">Contoh</span>':'')+'</h2>'+
     (m.target?'<p class="mini">🎯 '+esc(m.target)+'</p>':'')+
@@ -838,15 +904,16 @@ async function submitQuiz(m,qs,answers,score,startedAt){
 /* ---------- Render: Quiz (satu soal per layar) ---------- */
 function fillQuizDates(){
   const list=sortedMateri();
-  $("quizDateSel").innerHTML=list.map(m=>'<option value="'+esc(m.date)+'">'+esc(fmtShort(m.date))+' — '+esc(m.theme||"")+'</option>').join("");
+  $("quizDateSel").innerHTML=list.map(m=>'<option value="'+esc(m.date)+'">'+(m.locked?'🔒 ':'')+esc(fmtShort(m.date))+' — '+esc(m.theme||"")+'</option>').join("");
   $("quizDateSel").value=quizDateWanted();
 }
-$("quizDateSel").onchange=e=>{stopSpeak();quizDate=e.target.value;quizState=null;renderQuiz()};
+$("quizDateSel").onchange=e=>{stopSpeak();quizDate=e.target.value;quizState=null;renderQuiz();const mm=materiOf(e.target.value);if(DEMO&&mm&&mm.locked)showBuy()};
 function renderQuiz(){
   const el=$("quizBody"); if(!el) return;
   if(isLocked(levelId)){el.innerHTML=lockedCardHtml(levelOf(levelId));fillQuizDates();return}
   fillQuizDates();
   const m = materiOf(quizDateWanted());
+  if(m&&m.locked){el.innerHTML='<div class="card empty"><b>🔒</b>Quiz tanggal ini terkunci di Mode Contoh.<br><button class="btn" style="background:#22C064;color:#fff;margin-top:10px" onclick="showBuy()">🔓 Buka Semua Materi — Rp 99.000</button></div>';return}
   if(!m){el.innerHTML='<div class="card empty">'+(sortedMateri().length?'<b>📝</b>Quiz belum tersedia.':noDataMsg())+'</div>';return}
   const qs = m.quiz||[];
   if(!qs.length){el.innerHTML='<div class="card empty"><b>📝</b>Quiz belum tersedia untuk tanggal ini.<br>Coba tanggal lain, ya.</div>';return}
@@ -1232,6 +1299,12 @@ function enterDemo(){
 }
 $("demoBtn").onclick=()=>enterDemo();
 $("demoAct").onclick=()=>{go("activate")};
+/* Pop-up beli kode akses */
+function showBuy(){const m=$("buyModal");if(m)m.hidden=false}
+function hideBuy(){const m=$("buyModal");if(m)m.hidden=true}
+$("buyLater").onclick=hideBuy;
+$("buyBtn").onclick=()=>showBuy();
+$("buyModal").addEventListener("click",e=>{if(e.target.id==="buyModal")hideBuy()});
 renderUserName();
 getDevice();
 if(!getKey()){
