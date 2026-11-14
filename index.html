@@ -329,10 +329,12 @@ if("speechSynthesis" in window){
   loadVoices();
   try{window.speechSynthesis.addEventListener("voiceschanged",loadVoices)}catch(e){}
 }
+/* Audio HANYA untuk teks Bahasa Jepang murni: buang segmen romaji dalam
+   kurung ASCII "(...)" yang mengikuti kalimat Jepang pada data N5/N4. */
+function jpOnly(text){return String(text??"").replace(/\s*\([^)]*\)/g,"").trim()}
+function spk(text){return esc(jpOnly(text))}
 function speak(text){
-  /* Audio HANYA untuk teks Bahasa Jepang murni: buang segmen romaji dalam
-     kurung ASCII "(...)" yang mengikuti kalimat Jepang pada data N5/N4. */
-  const t=String(text??"").replace(/\s*\([^)]*\)/g,"").trim();
+  const t=jpOnly(text);
   if(!t) return;
   if(!("speechSynthesis" in window)){toast("Audio tidak tersedia di browser ini");return}
   const synth=window.speechSynthesis;
@@ -729,7 +731,7 @@ function renderDayDetail(el,m){
       '<p><span class="lbl">Arti</span><br>'+esc(g.meaning||"")+'</p>'+
       (g.formation?'<p><span class="lbl">Cara membentuk</span><br>'+esc(g.formation)+'</p>':'')+
       (g.nuance?'<p><span class="lbl">Nuansa</span><br>'+esc(g.nuance)+'</p>':'')+
-      (g.examples||[]).map(ex=>'<div class="ex"><button class="abtn" data-speak="'+esc(ex.jp)+'" aria-label="Dengarkan contoh">🔊</button><div class="jp">'+esc(ex.jp)+'</div><div class="id">'+esc(ex.id)+'</div></div>').join("")+
+      (g.examples||[]).map(ex=>'<div class="ex"><div class="jp">'+esc(ex.jp)+'</div><div class="id">'+esc(ex.id)+'</div></div>').join("")+
       '<button class="check '+(done?"on":"")+'" data-check-g="'+g.no+'">'+(done?"✓ Sudah paham":"Tandai sudah paham")+'</button>'+
       '</div></div>';
   });
@@ -739,12 +741,12 @@ function renderDayDetail(el,m){
 
   if((m.dialog||[]).length){
     h += '<div class="card"><h3>💬 Dialog</h3>'+ (m.dialog||[]).map((d,i)=>
-      '<div class="bubble '+(i%2?"b":"a")+'"><button class="abtn" data-speak="'+esc(d.jp)+'" aria-label="Dengarkan dialog">🔊</button><div class="sp">'+esc(d.speaker||"")+'</div><div>'+esc(d.jp)+'</div><div class="bid">'+esc(d.id)+'</div></div>').join("") + '</div>';
+      '<div class="bubble '+(i%2?"b":"a")+'"><button class="abtn" data-speak="'+spk(d.jp)+'" aria-label="Dengarkan dialog">🔊</button><div class="sp">'+esc(d.speaker||"")+'</div><div>'+esc(d.jp)+'</div><div class="bid">'+esc(d.id)+'</div></div>').join("") + '</div>';
   }
   if((m.bacaan||[]).length){
     h += '<div class="card"><h3>📰 Bacaan</h3>'+ (m.bacaan||[]).map(b=>
       '<div class="kinfo"><b>'+esc(b.title||"Bacaan")+'</b>'+
-      '<div class="kjp">'+esc(b.jp)+' <button class="abtn" data-speak="'+esc(b.jp)+'" aria-label="Dengarkan bacaan">🔊</button></div>'+
+      '<div class="kjp">'+esc(b.jp)+' <button class="abtn" data-speak="'+spk(b.jp)+'" aria-label="Dengarkan bacaan">🔊</button></div>'+
       (b.id?'<div class="kid">'+esc(b.id)+'</div>':'')+
       (b.vocab_notes?'<div class="kid" style="margin-top:6px"><b>Kosakata sulit:</b> '+esc(b.vocab_notes)+'</div>':'')+
       '</div>').join("") + '</div>';
@@ -784,16 +786,16 @@ function renderVocab(m){
       return '<button class="flash'+(flip?" flip":"")+'" data-flip="'+v.no+'"><span class="fw">'+esc(v.word)+'</span><span class="fr">'+esc(v.reading||"")+'</span>'+
         '<span class="fm">'+esc(v.meaning||"")+'<br><small>'+esc(v.example_jp||"")+'<br>'+esc(v.example_id||"")+'</small></span>'+
         '<span class="hint">'+(flip?(done?"✓ Sudah hafal — ketuk kartu untuk membalik":"Ketuk untuk membalik"):"Ketuk kartu untuk melihat arti")+'</span></button>'+
-        '<div class="audiorow"><button class="abtn wide" data-speak="'+esc(v.word)+'" aria-label="Dengarkan kata">🔊 Kata</button>'+
-        (v.example_jp?'<button class="abtn wide" data-speak="'+esc(v.example_jp)+'" aria-label="Dengarkan contoh kalimat">🔊 Contoh</button>':'')+'</div>'+
+        '<div class="audiorow"><button class="abtn wide" data-speak="'+spk(v.word)+'" aria-label="Dengarkan kata">🔊 Kata</button>'+
+        (v.example_jp?'<button class="abtn wide" data-speak="'+spk(v.example_jp)+'" aria-label="Dengarkan contoh kalimat">🔊 Contoh</button>':'')+'</div>'+
         '<button class="check '+(done?"on":"")+'" data-check-v="'+v.no+'" style="margin:-4px 0 12px">'+(done?"✓ Sudah hafal":"Tandai sudah hafal")+'</button>';
     }).join("");
     el.querySelectorAll("[data-flip]").forEach(b=>b.onclick=()=>{const k=levelId+":"+m.date+":"+b.dataset.flip;flipped.has(k)?flipped.delete(k):flipped.add(k);renderVocab(m)});
   } else {
     el.innerHTML=(m.vocab||[]).map(v=>{
       const done=!!(pr.vocab&&pr.vocab[v.no]);
-      return '<div class="vrow"><div class="w"><b>'+esc(v.word)+'</b> <span class="rd">'+esc(v.reading||"")+'</span> <button class="abtn" data-speak="'+esc(v.word)+'" aria-label="Dengarkan kata">🔊</button><div class="mn">'+esc(v.meaning||"")+'</div>'+
-        (v.example_jp?'<div class="ex2">'+esc(v.example_jp)+' <button class="abtn" data-speak="'+esc(v.example_jp)+'" aria-label="Dengarkan contoh kalimat">🔊</button><br>'+esc(v.example_id||"")+'</div>':'')+'</div>'+
+      return '<div class="vrow"><div class="w"><b>'+esc(v.word)+'</b> <span class="rd">'+esc(v.reading||"")+'</span> <button class="abtn" data-speak="'+spk(v.word)+'" aria-label="Dengarkan kata">🔊</button><div class="mn">'+esc(v.meaning||"")+'</div>'+
+        (v.example_jp?'<div class="ex2">'+esc(v.example_jp)+' <button class="abtn" data-speak="'+spk(v.example_jp)+'" aria-label="Dengarkan contoh kalimat">🔊</button><br>'+esc(v.example_id||"")+'</div>':'')+'</div>'+
         '<button class="check '+(done?"on":"")+'" data-check-v="'+v.no+'">'+(done?"✓ Hafal":"Hafal?")+'</button></div>';
     }).join("");
   }
@@ -1029,7 +1031,7 @@ function renderKana(){
 
     (b.kartu||[]).forEach(k=>{
       h+='<div class="kinfo"><b>'+esc(k.judul)+'</b>'+
-        (k.jp?'<div class="kjp">'+esc(k.jp)+' <button class="abtn" data-speak="'+esc(k.jp)+'" aria-label="Dengarkan contoh">🔊</button></div>':'')+
+        (k.jp?'<div class="kjp">'+esc(k.jp)+' <button class="abtn" data-speak="'+spk(k.jp)+'" aria-label="Dengarkan contoh">🔊</button></div>':'')+
         '<div class="kid">'+esc(k.id)+'</div></div>';
     });
 
@@ -1053,7 +1055,7 @@ function renderKana(){
           h+='<button class="flash'+(flip?" flip":"")+'" data-kflip="'+esc(fk)+'"><span class="fw">'+esc(k.kana)+'</span>'+
             '<span class="fm"><b style="font-size:19px">'+esc(k.romaji)+'</b>'+(k.catatan?'<br><small>'+esc(k.catatan)+'</small>':'')+'</span>'+
             '<span class="hint">'+(flip?"Ketuk untuk membalik":"Ketuk kartu untuk melihat romaji")+'</span></button>'+
-            '<div class="audiorow"><button class="abtn wide" data-speak="'+esc(k.kana)+'" aria-label="Dengarkan huruf">🔊 Dengar</button></div>'+
+            '<div class="audiorow"><button class="abtn wide" data-speak="'+spk(k.kana)+'" aria-label="Dengarkan huruf">🔊 Dengar</button></div>'+
             '<button class="check '+(on?"on":"")+'" data-kmark="'+esc(b.kode)+':'+k.no+'" style="margin:-4px 0 12px">'+(on?"✓ Sudah hafal":"Tandai sudah hafal")+'</button>';
         });
       }
@@ -1062,8 +1064,8 @@ function renderKana(){
     if((b.vocab||[]).length){
       b.vocab.forEach(v=>{
         const on=!!prog.learned[b.kode+":v"+v.no];
-        h+='<div class="vrow"><div class="w"><b>'+esc(v.word)+'</b> <span class="rd">'+esc(v.reading||"")+'</span> <button class="abtn" data-speak="'+esc(v.word)+'" aria-label="Dengarkan kata">🔊</button><div class="mn">'+esc(v.meaning||"")+'</div>'+
-          (v.example_jp?'<div class="ex2">'+esc(v.example_jp)+' <button class="abtn" data-speak="'+esc(v.example_jp)+'" aria-label="Dengarkan contoh kalimat">🔊</button><br>'+esc(v.example_id||"")+'</div>':'')+'</div>'+
+        h+='<div class="vrow"><div class="w"><b>'+esc(v.word)+'</b> <span class="rd">'+esc(v.reading||"")+'</span> <button class="abtn" data-speak="'+spk(v.word)+'" aria-label="Dengarkan kata">🔊</button><div class="mn">'+esc(v.meaning||"")+'</div>'+
+          (v.example_jp?'<div class="ex2">'+esc(v.example_jp)+' <button class="abtn" data-speak="'+spk(v.example_jp)+'" aria-label="Dengarkan contoh kalimat">🔊</button><br>'+esc(v.example_id||"")+'</div>':'')+'</div>'+
           '<button class="check '+(on?"on":"")+'" data-kmark="'+esc(b.kode)+':v'+v.no+'">'+(on?"✓ Hafal":"Hafal?")+'</button></div>';
       });
     }
