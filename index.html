@@ -330,7 +330,9 @@ if("speechSynthesis" in window){
   try{window.speechSynthesis.addEventListener("voiceschanged",loadVoices)}catch(e){}
 }
 function speak(text){
-  const t=String(text??"").trim();
+  /* Audio HANYA untuk teks Bahasa Jepang murni: buang segmen romaji dalam
+     kurung ASCII "(...)" yang mengikuti kalimat Jepang pada data N5/N4. */
+  const t=String(text??"").replace(/\s*\([^)]*\)/g,"").trim();
   if(!t) return;
   if(!("speechSynthesis" in window)){toast("Audio tidak tersedia di browser ini");return}
   const synth=window.speechSynthesis;
@@ -433,9 +435,21 @@ const flipped = new Set();
 let lockNote = "";       // penjelasan kunci yang ditampilkan di Beranda
 
 function curData(){return LVDATA[levelId]||{materi:[],kind:"none"}}
+/* Jaring pengaman anti-ganda: satu paket per tanggal (baris ganda di server
+   disisihkan), dan di dalam satu hari tiap nomor grammar/vocab/dialog/bacaan/
+   quiz hanya diambil yang pertama. */
+function dedupeDay_(m){
+  if(!m) return m;
+  const byNo=arr=>{const seen=new Set(),out=[];(arr||[]).forEach(x=>{const k=x&&x.no;if(k!=null){if(seen.has(k))return;seen.add(k)}out.push(x)});return out};
+  return Object.assign({},m,{grammar:byNo(m.grammar),vocab:byNo(m.vocab),dialog:byNo(m.dialog),bacaan:byNo(m.bacaan),quiz:byNo(m.quiz)});
+}
 function sortedMateri(lv){
   const d=LVDATA[lv||levelId];
-  return [...((d&&d.materi)||[])].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  const seen=new Set(),out=[];
+  [...((d&&d.materi)||[])].sort((a,b)=>String(b.date).localeCompare(String(a.date))).forEach(m=>{
+    if(!m||seen.has(m.date)) return; seen.add(m.date); out.push(dedupeDay_(m));
+  });
+  return out;
 }
 function materiOf(date){return sortedMateri().find(m=>m.date===date)||null}
 /* Default tanggal quiz: hari ini (Asia/Tokyo) bila materinya ada — termasuk data
@@ -740,12 +754,23 @@ function renderDayDetail(el,m){
   el.innerHTML = h;
 
   $("mQuiz").onclick=()=>{quizDate=m.date;quizState=null;go("quiz")};
-  el.querySelectorAll(".ghead").forEach(b=>b.onclick=()=>b.closest(".gcard").classList.toggle("open"));
+  /* Akordeon grammar: satu kartu terbuka pada satu waktu. Kartu menutup hanya
+     bila user menutupnya sendiri atau membuka grammar berikutnya. */
+  el.querySelectorAll(".ghead").forEach(b=>b.onclick=()=>{
+    const card=b.closest(".gcard"), was=card.classList.contains("open");
+    el.querySelectorAll(".gcard.open").forEach(c=>c.classList.remove("open"));
+    if(!was) card.classList.add("open");
+  });
+  /* Tandai paham: perbarui tombol di tempat TANPA render ulang, supaya kartu
+     grammar yang sedang dibaca tetap terbuka. */
   el.querySelectorAll("[data-check-g]").forEach(b=>b.onclick=()=>{
     const no=b.dataset.checkG;
     setProg(levelId,m.date,p=>{p.grammar=p.grammar||{};p.grammar[no]=!p.grammar[no]});
+    const done=!!((progOf(levelId,m.date).grammar||{})[no]);
+    b.classList.toggle("on",done);
+    b.textContent=done?"✓ Sudah paham":"Tandai sudah paham";
     queueProgres(m);
-    renderMateri(); renderHome();
+    renderHome();
   });
   el.querySelectorAll("[data-vm]").forEach(b=>b.onclick=()=>{vocabMode=b.dataset.vm;renderMateri()});
   renderVocab(m);
@@ -776,7 +801,7 @@ function renderVocab(m){
     const no=b.dataset.checkV;
     setProg(levelId,m.date,p=>{p.vocab=p.vocab||{};p.vocab[no]=!p.vocab[no]});
     queueProgres(m);
-    renderMateri(); renderHome();
+    renderVocab(m); renderHome();
   });
 }
 
