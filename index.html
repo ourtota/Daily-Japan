@@ -47,6 +47,9 @@ main{max-width:560px;margin:0 auto;padding:14px 16px 112px}
 .chip.done{background:#E3F2E7;color:var(--ok)}
 .mini{font-size:13px;color:var(--mute);line-height:1.6}
 select,input[type=search],input[type=text]{width:100%;border:0;background:var(--chip);border-radius:14px;padding:13px 14px;font-size:16px;outline:none;min-height:48px;margin-bottom:12px}
+/* Dropdown tanggal Materi: dibuat bold & mencolok agar mudah diperhatikan (Tota, 2026-11-14) */
+#view-materi label[for="dateSel"]{display:block;font-size:15px;font-weight:800;color:var(--teal);margin:0 0 6px}
+#dateSel{font-size:17px;font-weight:800;background:#FFF3E2;border:2px solid var(--orange);color:#7A3E00;min-height:54px;box-shadow:0 2px 8px rgba(184,92,30,.18)}
 .gcard{border:1.5px solid var(--teal);border-radius:16px;margin-bottom:11px;overflow:hidden;background:#F8FBFA}
 .ghead{width:100%;display:flex;gap:10px;align-items:flex-start;background:none;border:0;padding:14px;text-align:left;cursor:pointer;min-height:52px}
 .ghead .pat{flex:1;font-size:18px;font-weight:800;color:var(--teal)}
@@ -106,24 +109,24 @@ select,input[type=search],input[type=text]{width:100%;border:0;background:var(--
 .bnav button.on{color:var(--teal);background:var(--chip)}
 .toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);transform:translate(-50%,-90px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;font-weight:700;transition:transform .25s;z-index:30;max-width:92vw;text-align:center}
 .toast.on{transform:translate(-50%,0)}
-.lvgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.lvcard{border:2px solid var(--line);background:var(--card);border-radius:18px;padding:14px 13px;text-align:left;cursor:pointer;min-height:86px}
-.lvcard b{display:block;font-size:17px;color:var(--teal);margin-bottom:3px}
-.lvcard span{font-size:12.5px;color:var(--mute);line-height:1.45;display:block}
+.lvgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.lvcard{border:2px solid var(--line);background:var(--card);border-radius:16px;padding:9px 11px;text-align:left;cursor:pointer}
+.lvcard b{display:block;font-size:15.5px;color:var(--teal);margin-bottom:1px}
+.lvcard span{font-size:11.5px;color:var(--mute);line-height:1.35;display:block}
 .lvcard.on{border-color:var(--teal);background:#EAF5F1;box-shadow:0 3px 10px rgba(14,95,86,.18)}
 .lvcard.on b::after{content:" ✓";color:var(--ok)}
 .lvcard:active{transform:scale(.98)}
 .lvcard.locked{opacity:.8;background:#F4F6F5;border-style:dashed}
-.lvcard .streak{display:inline-block;background:#FFF3E2;color:#9A5B00;border-radius:99px;padding:2px 9px;font-size:12px;font-weight:800;margin-top:6px}
+.lvcard .streak{display:inline-block;background:#FFF3E2;color:#9A5B00;border-radius:99px;padding:2px 9px;font-size:12px;font-weight:800;margin-top:4px}
 .badge{display:inline-block;background:var(--orange);color:#fff;border-radius:99px;padding:1px 8px;font-size:11px;font-weight:800;vertical-align:2px;margin-left:6px}
 .brandtxt{display:flex;flex-direction:column;min-width:0}
 .uname{background:none;border:0;padding:0;margin-top:1px;text-align:left;font-size:11.5px;color:var(--mute);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw;font-weight:600}
-.kanabtn{display:flex;gap:12px;align-items:center;width:100%;border:0;border-radius:20px;padding:16px;color:#fff;background:linear-gradient(135deg,#B04A82,#7E6BB5);cursor:pointer;text-align:left;margin-bottom:12px;box-shadow:0 4px 14px rgba(126,107,181,.35)}
+.kanabtn{display:flex;gap:10px;align-items:center;width:100%;border:0;border-radius:16px;padding:10px 14px;color:#fff;background:linear-gradient(135deg,#B04A82,#7E6BB5);cursor:pointer;text-align:left;margin-bottom:10px;box-shadow:0 4px 14px rgba(126,107,181,.35)}
 .kanabtn:active{transform:scale(.98)}
-.kanabtn .kb-k{font-size:29px;font-weight:900;flex:none;line-height:1.15}
+.kanabtn .kb-k{font-size:21px;font-weight:900;flex:none;line-height:1.15}
 .kanabtn .kb-t{flex:1;min-width:0}
-.kanabtn .kb-t b{display:block;font-size:17px}
-.kanabtn .kb-t span{font-size:12.5px;opacity:.93;line-height:1.4;display:block}
+.kanabtn .kb-t b{display:block;font-size:15.5px}
+.kanabtn .kb-t span{font-size:11.5px;opacity:.93;line-height:1.35;display:block}
 .kanabtn .kb-a{font-size:26px;opacity:.85;flex:none}
 .kgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .kgrp{grid-column:1/-1;font-size:12px;font-weight:800;color:var(--mute);margin-top:8px;letter-spacing:.3px}
@@ -213,7 +216,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
 
   <!-- MATERI -->
   <section id="view-materi" hidden>
-    <label class="mini" for="dateSel">Pilih tanggal materi</label>
+    <label class="mini" for="dateSel">📅 Pilih tanggal materi</label>
     <select id="dateSel" aria-label="Pilih tanggal materi"></select>
     <div id="materiBody"></div>
   </section>
@@ -399,6 +402,9 @@ function isLocked(lv){
   if(!USER||!USER.unlock) return true; // belum ada status server -> terkunci
   return !USER.unlock[lv];
 }
+/* Level N1 belum ditampilkan selama gembok N2 belum terbuka (Tota, 2026-11-14):
+   kartu & tombol N1 baru muncul setelah N2 terbuka. */
+function visibleLevels(){return LEVELS.filter(L=>L.id!=="N1"||!isLocked("N2"))}
 function streakOf(lv){
   if(!USER||!USER.streak) return null;
   const v=USER.streak[lv];
@@ -637,7 +643,7 @@ function setLevel(id){
 }
 function levelSegHtml(){
   return '<div class="seg" role="group" aria-label="Ganti level">'+
-    LEVELS.map(L=>'<button data-lv="'+L.id+'" class="'+(L.id===levelId?"on":"")+'">'+(isLocked(L.id)?"🔒 ":"")+L.id+'</button>').join("")+
+    visibleLevels().map(L=>'<button data-lv="'+L.id+'" class="'+(L.id===levelId?"on":"")+'">'+(isLocked(L.id)?"🔒 ":"")+L.id+'</button>').join("")+
     '</div>';
 }
 function lockedCardHtml(L){
@@ -654,7 +660,7 @@ function kanaBtnHtml(){
 function wireKanaBtn(){const b=$("hKana");if(b)b.onclick=()=>go("kana")}
 function levelCardsHtml(){
   return '<div class="lvgrid" role="group" aria-label="Pilih level belajar">'+
-    LEVELS.map(L=>{
+    visibleLevels().map(L=>{
       const locked=isLocked(L.id), st=streakOf(L.id);
       return '<button class="lvcard'+(L.id===levelId?" on":"")+(locked?" locked":"")+'" data-lv="'+L.id+'"><b>'+(locked?"🔒 ":"")+"Level "+L.id+'</b><span>'+esc(L.desc)+'</span>'+
         (locked?'<span style="color:var(--bad);font-weight:700">'+esc(lockText(L))+'</span>':
@@ -942,6 +948,10 @@ function renderArsip(){
 }
 
 function renderAll(){
+  /* Bila N1 sedang terpilih padahal gembok N2 belum terbuka (status server
+     memastikan), kembalikan pilihan ke N3 agar user tidak nyasar ke level
+     yang belum ditampilkan. */
+  if(levelId==="N1"&&!DEMO&&USER&&USER.unlock&&!USER.unlock.N2){levelId="N3";lsSet(LS.level,"N3")}
   renderHome(); renderMateri(); renderQuiz(); renderArsip(); renderKana();
   ["home","materi","quiz","arsip","kana","activate"].forEach(x=>{const s=$("view-"+x);if(s)s.hidden=x!==view});
   updateSrc();
